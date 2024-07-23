@@ -1,0 +1,865 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+[PERFIL-1_UMA-00] // Atom Controles
+COMPILER_CALL_CAN_SPAN_PLCS
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Auth: Carlos Jiménez		@cjhirashi		<cjimenez@atomcontroles.com>
+// Auth: Marcelo Piña		@mpina 			<mpina@atomcontroles.com>
+// Vers: 2.0.0
+// Desc: Operación de UMA perfil 1
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Puertos de comunicación
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	PROTOCOL 			PROTOCOL_ASCII_TERMINAL	
+//						PROTOCOL_OPTO_22_SLAVE
+//						PROTOCOL_N2_OPEN_SLAVE	
+//						PROTOCOL_MODBUS_SLAVE
+//						PROTOCOL_BACNET_MSTP
+//						PROTOCOL_OPTO22_MASTER
+//						PROTOCOL_MODBUS_MASTER
+//
+//	DEVICE_ADDRESS 		1 to 253
+//
+//	BAUD_RATE 			2400, 4800, 9600, 19200, 38400, 57600, 76800
+//
+//	PARITY 				PARITY_NONE, PARITY_ODD, PARITY_EVEN
+//
+//	STOP_BIT 			STOP_BIT_0, STOP_BIT_1
+//
+//
+//	COMM [#] 	[PROTOCOL] 					DEVICE_ADDRESS = #		BAUD_RATE = [#]		PARITY_ODD [OPTION]
+//
+//	COMM 1 		PROTOCOL_MODBUS_SLAVE		DEVICE_ADDRESS = 1		BAUD_RATE = 9600	PARITY_ODD STOP_BIT_1
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	//COMM 1		PROTOCOL_BACNET_MSTP   		DEVICE_ADDRESS = 2  
+	//COMM 2		PROTOCOL_OPTO_22_SLAVE   	DEVICE_ADDRESS = 2 
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Puertos remotos
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	REMOTE	[PORT] 	[VAR]	DEVICE_ADDRESS [#]		[NAME]		// RMT_# Description
+//
+//	REMOTE	COM1 	AI_1	DEVICE_ADDRESS 2		SAT			// RMT_1 Analog Inpunt
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Calibración de entradas
+/////////////////////////////////////////////////////////////////////////////////////////////
+// 	0	AI_TYPE_12bit				// ADC 12-bits : 0 - 4095 (no calibration)
+//	1	AI_TYPE_1kNI_C				// 1000 ohms Nickel RTD °C (DIP SWITCH = ON, calibrated with offset)
+//	2	AI_TYPE_1kSI_C				// 1000 ohms Silicon PTC °C (DIP SWITCH = ON, calibrated with offset)
+//	3	AI_TYPE_1kA99_C				// 1000 ohms Silicon A99 °C (DIP SWITCH = ON, calibrated with offset)
+//	4	AI_TYPE_0_10_vdc			// 0-10.0 vdc or (0-20 ma. @250 ohms, calibrated with multiplier)
+//	5	AI_TYPE_4_20_ma				// 4-20ma @ 250 ohms (calibrated with multiplier)
+//	6	AI_TYPE_1kNI_F				// 1000 ohms Nickel RTD °F (DIP SWITCH = ON, calibrated with offset)
+//	7	AI_TYPE_1kSI_F				// 1000 ohms Silicon PTC °F (DIP SWITCH = ON, calibrated with offset)
+//	8	AI_TYPE_1kA99_F				// 1000 ohms Silicon A99 °F (DIP SWITCH = ON, calibrated with offset)
+//	9	AI_TYPE_RATIO				// Ratiometric (0-100%=10-90FSR=0.5-4.5VDC, calibrated with multiplier)
+//	10	AI_TYPE_THERMOCOUPLE_J_C	// Type J thermocouple (51.7 uV/°C x191 amp, calibrated with offset)
+//	11	AI_TYPE_THERMOCOUPLE_K_C	// Type K thermocouple (40.6 uV/°C x191 amp, calibrated with offset)
+//	12	AI_TYPE_ST_S3K_10K			// 10K Type III NTC (0K Ohms @ 25°C, calibrated with offset)
+//	13	AI_TYPE_TC_1000_1			// Current transformer (NXSF only, 1000:1 ratio, calibrated with multiplier)
+//	14	AI_TYPE_DWYER_1K_C			// 1000 ohms Platinum RTD °C (DIP SWITCH = ON, calibrated with offset)
+//	15	AI_TYPE_DWYER_1K_F			// 1000 ohms Platinum RTD °F (DIP SWITCH = ON, calibrated with offset)
+//	16	AI_TYPE_NTC_10K_III_C_PU	// 10K Type III NTC (0K Ohms @ 77°F, calibrated with offset)
+//	17	AI_TYPE_GREYSTONE_20K		// Greystone 20K temperature sensor TSAPA20x\n" );	
+// Added on v3.08.0
+//	18	AI_TYPE_OHMS_12V			// Measures Ohms, other side connected to +12V ref
+//	19	AI_TYPE_OHMS_5VPU			// Measures Ohms, other side connected to 0V, using internal 5V pull up
+//	20	AI_TYPE_NTC_CURVE_A_12V		// NTC using curve A constants, other side connected to +12V ref
+//	21	AI_TYPE_NTC_CURVE_A_5VPU	// NTC using curve A constants, other side connected to 0V, using internal 5V pull up
+//	22	AI_TYPE_NTC_CURVE_B_12V		// NTC using curve B constants, other side connected to +12V ref
+//	23	AI_TYPE_NTC_CURVE_B_5VPU	// NTC using curve B constants, other side connected to 0V, using internal 5V pull up
+//
+//	AI_CALIBRACION // En variables resistivas este valor se refiere a un Offset, en el resto cumple como multiplicador
+//	
+//	AI_CONFIGURATION 	[VAR]		[# TYPE] 	AI_CALIBRATION = [FLOUT]
+//
+//	AI_CONFIGURATION 	AI_1		12   		AI_CALIBRATION = 1.00		// NTC 10K Ohm TYPE III @ 25°C
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	AI_CONFIGURATION	BI_1 = 0		// ADC 12-bits : 0 - 4095 
+	AI_CONFIGURATION	BI_2 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION	BI_3 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION	BI_4 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION 	AI_5 = 1	AI_CALIBRATION = 1.000   	// 1000 ohms Nickel RTD °C (DIP SWITCH = ON, calibrated with offset)
+	AI_CONFIGURATION 	AI_6 = 1	AI_CALIBRATION = 1.000    	// 1000 ohms Nickel RTD °C (DIP SWITCH = ON, calibrated with offset)
+	AI_CONFIGURATION 	AI_7 = 14	AI_CALIBRATION = 1.000   	// 1000 ohms Platinum RTD °C (DIP SWITCH = ON, calibrated with offset)
+	AI_CONFIGURATION 	AI_8 = 4	AI_CALIBRATION = 10.000    	// 0-10.0 vdc    or    (0-20 ma.  @250 ohms)
+	AI_CONFIGURATION	AI_9 = 4	AI_CALIBRATION = 10.000    	// 0-10.0 vdc    or    (0-20 ma.  @250 ohms)
+	AI_CONFIGURATION	BI_12 = 0		// ADC 12-bits : 0 - 4095
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Definición de variables
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	DEF		[VAR]		[NANE]	
+//
+//	DEF		AI_1		SAT			// SUPPLY AIR TEMP
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	// INPUTS
+	DEF  	BI_1		ST_SF 		// [Read]	[ACTIVO/INACTIVO]	Estado de operación de Ventilador de suministro
+	DEF  	BI_2		IN_FT1  	// [Read]	[SUCIOS/LIMPIOS]	Estado de prefiltros
+	DEF  	BI_3		IN_FT2 		// [Read]	[SUCIOS/LIMPIOS]	Estado de filtros de bolsa
+	DEF  	BI_4		ST_INC  	// [Read]	[ALARMA/NORMAL]		Estado de alarma de detección de incendios
+	DEF  	AI_5  		IN_SAT  	// [Read]	[°C]				Temperatura de suministro de aire
+	DEF  	AI_6  		IN_RAT		// [Read]	[°C]				Temperatura de retorno de aire
+	DEF  	AI_7 		IN_SPT 		// [Read]	[°C]				Temperatura de cuarto
+	DEF  	AI_8 		ST_HCV     	// [Read]	[%]					Estado de apertura de válvula de agua caliente
+	DEF  	AI_9 		ST_CCV 		// [Read]	[%]					Estado de apertura de válvula de agua helada
+	DEF		BI_12		MANUAL		// [READ]	[ON/OFF]			Arranque manual de sistema desde tablero
+
+	// OUTPUTS
+	DEF  	BO_1		SS_SF  		// [Read]	[ARRANQUE/PARO]		Arranque de ventilador de suministro de aire
+	DEF  	AO_1  		CN_SF		// [Read]	[%]					Control de velocidad de ventilador de suministro de aire
+	DEF  	AO_2  		CN_HCV  	// [Read]	[%]					Control de apertura de válvula de agua caliente
+	DEF  	AO_3  		CN_CCV  	// [Read]	[%]					Control de apertura de válvula de agua helada
+
+	//.......................................................................................
+	// VARIABLES: [ SENSORES Y SETPOINTS ]
+
+	DEF		RES_FLT_1	RAT				// [READ]	[°C]				TEMPERATURA DE RETORNO DE AIRE
+	DEF		RES_FLT_2	SPT				// [READ]	[°C]				TEMPERATURA DE AREA 1
+
+	DEF		ADF_1		SP_SPT			// [WRITE]	[°C]				SETPOINT DE TEMPERATURA DE AREA
+	DEF		ADF_2		SP_SPT_MAX		// [READ]	[°C]				LIMITE MAXIMO DE SETPOINT DE TEMPERATURA DE AREA 
+	DEF		ADF_3		SP_SPT_MIN		// [READ]	[°C]				LIMITE MINIMO DE SETPOINT DE TEMPERATURA DE AREA
+	
+	DEF		RES_FLT_4	SAT				// [READ]	[°C]				TEMPERATURA DE SUMINISTRO DE AIRE 
+	DEF		RES_FLT_5	SP_SAT			// [READ]	[°C]				SETPOINT DE TEMPERATURA DE SUMINISTRO DE AIRE 
+		
+	DEF		RES_BIT_1	ST_FT1			// [READ]	[SUCIOS/LIMPIOS]	ESTADO DE FILTROS 1 GRAFICOS
+	DEF		RES_BIT_2	ST_FT2			// [READ]	[SUCIOS/LIMPIOS]	ESTADO DE FILTROS 2 GRAFICOS
+		
+	DEF		RES_FLT_10	Y0				// [READ]
+	DEF		ADF_10		Y1				// [READ]	[°C]				LIMITE MAXIMO DE TEMPERATURA DE SALIDA 
+	DEF		ADF_11		Y2				// [READ]	[°C]				LIMITE MINIMO DE TEMPERATURA DE SALIDA 
+	DEF		RES_FLT_11	X0				// [READ] 
+	DEF		ADF_12		X1				// [READ]	[°C]				LIMITE MINIMO DE TEMPERATURA DE ENTRADA 
+	DEF		ADF_13		X2				// [READ]	[°C]				LIMITE MAXIMO DE TEMPERATURA DE ENTRADA 
+	DEF		RES_FLT_12	M				// [READ] 
+	DEF		RES_FLT_13	BX				// [READ] 
+	DEF		RES_FLT_14	B				// [READ] 
+	DEF		RES_FLT_15	YX				// [READ] 
+		
+	//.......................................................................................
+	// VARIABLES: [ TIMERS ]
+	
+	DEF		ADF_14		LM_TM			// [READ]	[SEG]				LIMITE DE CONTEO TIMERS 
+	
+	DEF		RES_FLT_16	T_SYS_ON		// [READ]	[SEG]				TIMER ON, ACTIVACION SISTEMA 
+	DEF		RES_FLT_17	T_SYS_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION SISTEMA 
+		
+	DEF		RES_FLT_18	T_VSUM_ON		// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL VENTILACION SUMINISTRO 
+	DEF		RES_FLT_19	T_VSUM_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL VENTILACION SUMINISTRO 
+		
+	DEF		RES_FLT_22	T_TM_ON 		// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL TEMPERATURA 
+	DEF		RES_FLT_23	T_TM_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL TEMPERATURA 
+		
+	DEF		RES_FLT_24	T_FT_ON			// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL FILTROS 
+	DEF		RES_FLT_25	T_FT_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL FILTROS 
+		
+	DEF		RES_FLT_26	T_SF_ON			// [READ]	[SEG]				TIMER ON, ESTADO VENTILADOR SUMINISTRO 
+	DEF		RES_FLT_27	T_SF_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO VENTILADOR SUMINISTRO 
+		
+	DEF		RES_FLT_30	T_CM_ON			// [READ]	[SEG]				TIMER ON, ESTADO DE COMPRESOR 
+	DEF		RES_FLT_31	T_CM_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO DE COMPRESOR 
+	
+	DEF		RES_FLT_32	T_TEST_ON		// [READ]	[SEG]				TIMER ON, TEST
+	
+	//.......................................................................................
+	// VARIABLES: [ PRINCIPAL ]
+		
+	DEF		RES_BIT_201	P_MANUAL		// [READ]
+	DEF		RES_BIT_3	MODO			// [WRITE]	[AUTO/MANUAL]		MODO DE ARRANQUE DE SISTEMA 
+	DEF		RES_BIT_4	ACT_HOR			// [READ]	[ACTIVO/INACTIVO]	ACTIVACION HORARIO DE SISTEMA
+	DEF		RES_BIT_5	ACT_MAN			// [WRITE]	[ACTIVO/INACTIVO]	ACTIVACION MANUAL DE SISTEMA
+	
+	DEF		RES_BIT_6	SS_SYS			// [READ]	[ACTIVAR/PARO]		ACTIVACION GENERAL DEL SISTEMA
+	DEF		RES_BIT_7	ST_SYS			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE ACTIVACION GENERAL DEL SISTEMA 
+	DEF		RES_BIT_8	AL_SYS			// [READ]	[ALARMA/NORMAL]		ALARMA GENERAL DEL SISTEMA
+	
+	DEF		RES_BIT_9	SS_VSUM			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	DEF		RES_BIT_10	ST_VSUM			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	DEF		RES_BIT_11	AL_VSUM			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	DEF		ADF_15		DL_VSUM_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE VENTILACION DE SUMINISTRO 
+	DEF		ADF_16		DL_VSUM_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	
+	DEF		RES_BIT_15	SS_TM			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE TEMPERATURA 
+	DEF		RES_BIT_16	ST_TM			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE TEMPERATURA 
+	DEF		RES_BIT_17	AL_TM			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE TEMPERATURA 
+	DEF		ADF_19		DL_TM_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE TEMPERATURA 
+	DEF		ADF_20		DL_TM_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE TEMPERATURA
+	
+	DEF		RES_BIT_18	SS_FT			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE FILTRACION 
+	DEF		RES_BIT_19	ST_FT			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE FILTRACION 
+	DEF		RES_BIT_20	AL_FT			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE FILTRACION 
+	DEF		ADF_21		DL_FT_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE FILTRACION
+	DEF		ADF_22		DL_FT_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE FILTRACION 
+	
+	DEF		RES_BIT_40	ALM_PARO		// [READ]	[ALARMA/NORMAL]		ALARMA CRITICA PARA PARO DE SISTEMA 
+	DEF		RES_BIT_41	RESET_ALM		// [READ]	[RESET/NORMAL]		RESET DE ALARMA CRITICA 
+	
+	//.......................................................................................
+	// VARIABLES: [ VENTILACION SUMINISTRO ]
+
+	DEF		RES_BIT_42	ALM_SF			// [READ]	[ALARMA/NORMAL]		ALARMA DE ARRANQUE VENTILADOR SUMINISTRO 
+	DEF		ADF_70		VEL_MAX			// [READ]	[%]					VELOCIDAD DE VENTILADOR MAXIMA
+	DEF		ADF_71		VEL_MIN			// [READ]	[%]					VELOCIDAD DE VENTILADOR MINIMA
+	
+	//.......................................................................................
+	// VARIABLES: [ TEMPERATURA ]
+	
+	DEF		RES_FLT_34	TEMP			// [READ]	[°C]				TEMPERATURA EN OPERACION
+	DEF		RES_BIT_44	SL_TEMP			// [WRITE]	[CUARTO/RETORNO]	SELECTOR DE TEMPERATURA EN OPERACION
+	
+	DEF		ADF_23		LM_AL_TM		// [READ]	[°C]				LIMITE MAX MIN PARA ALARMA POR TEMPERATURA FUERA DE RANGO
+	DEF		RES_BIT_45	AL_TEMP_H		// [READ]	[ALARMA/NORMAL]		ALARMA POR TEMPERATURA DE AREA ALTA
+	DEF		RES_BIT_46	AL_TEMP_L		// [READ]	[ALARMA/NORMAL]		ALARMA POR TEMPERATURA DE AREA BAJA
+	DEF		RES_BIT_47	AL_SAT_H		// [READ]	[ALARMA/NORMAL]		ALARMA POR TEMPERATURA DE SUMINISTRO ALTA
+	DEF		RES_BIT_48	AL_SAT_L		// [READ]	[ALARMA/NORMAL]		ALARMA POR TEMPERATURA DE SUMINISTRO BAJA
+	
+	//.......................................................................................
+	// VARIABLES DE CONTROLES DE DEMANDA
+	
+		// VARIABLES: [ PID1 ] VENTILADOR SUMINISTRO
+		DEF		RES_FLT_36	PI1_VAR		// [Read]						VARIABLE DE CONTROL
+		DEF		RES_FLT_37	PI1_SP		// [Read]						SETPOINT DE CONTROL
+		DEF		RES_BIT_49	PI1_SS		// [Read]						ACTIVACION DE CONTROL
+			// VARIABLES: PI 1
+			DEF		ADF_26		PI1_DIR		// [Read]	[1/-1]			DIRECCION DE CONTROL
+			DEF		ADF_27		PI1_P		// [Read]	[#.#]			BANDA PROPORCIONAL
+			DEF		ADF_28		PI1_I		// [Read]	[#.#]			BANDA INTEGRAL
+			DEF		ADF_29		PI1_MAX		// [Read]	[%]				LIMITE MAXIMO
+			DEF		ADF_30		PI1_MIN		// [Read]	[%]				LIMITE MINIMO
+			DEF		RES_FLT_38	PI1_ERR		// [Read]					ERROR
+			DEF		RES_FLT_39	PI1_RP		// [Read]	[%]				RESULTANTE PROPORCIONAL
+			DEF		RES_FLT_40	PI1_RI		// [Read]	[%]				RESULTANTE INTEGRAL
+			DEF		RES_FLT_41	PI1_RIS		// [Read]	[%]				RESULTANTE INTEGRAL ACUMULATIVO
+			DEF		RES_FLT_42	PI1_OUT		// [Read]	[%]				DEMANDA DE CONTROL
+	
+		// VARIABLES: [ PID3 ] TEMPERATURA DE AREA
+		DEF		RES_FLT_50	PI3_VAR		// [Read]						VARIABLE DE CONTROL
+		DEF		RES_FLT_51	PI3_SP		// [Read]						SETPOINT DE CONTROL
+		DEF		RES_BIT_51	PI3_SS		// [Read]						ACTIVACION DE CONTROL
+			// VARIABLES: PI 3
+			DEF		ADF_36		PI3_DIR		// [Read]	[1/-1]			DIRECCION DE CONTROL
+			DEF		ADF_37		PI3_P		// [Read]	[#.#]			BANDA PROPORCIONAL
+			DEF		ADF_38		PI3_I		// [Read]	[#.#]			BANDA INTEGRAL
+			DEF		ADF_39		PI3_MAX		// [Read]	[%]				LIMITE MAXIMO
+			DEF		ADF_40		PI3_MIN		// [Read]	[%]				LIMITE MINIMO
+			DEF		RES_FLT_52	PI3_ERR		// [Read]					ERROR
+			DEF		RES_FLT_53	PI3_RP		// [Read]	[%]				RESULTANTE PROPORCIONAL
+			DEF		RES_FLT_54	PI3_RI		// [Read]	[%]				RESULTANTE INTEGRAL
+			DEF		RES_FLT_55	PI3_RIS		// [Read]	[%]				RESULTANTE INTEGRAL ACUMULATIVO
+			DEF		RES_FLT_56	PI3_OUT		// [Read]	[%]				DEMANDA DE CONTROL
+			
+		// VARIABLES: [ PID4 ] TEMPERATURA DE SUMINISTRO
+		DEF		RES_FLT_57	PI4_VAR		// [Read]						VARIABLE DE CONTROL
+		DEF		RES_FLT_58	PI4_SP		// [Read]						SETPOINT DE CONTROL
+		DEF		RES_BIT_52	PI4_SS		// [Read]						ACTIVACION DE CONTROL
+			// VARIABLES: PI 4
+			DEF		ADF_41		PI4_DIR		// [Read]	[1/-1]			DIRECCION DE CONTROL
+			DEF		ADF_42		PI4_P		// [Read]	[#.#]			BANDA PROPORCIONAL
+			DEF		ADF_43		PI4_I		// [Read]	[#.#]			BANDA INTEGRAL
+			DEF		ADF_44		PI4_MAX		// [Read]	[%]				LIMITE MAXIMO
+			DEF		ADF_45		PI4_MIN		// [Read]	[%]				LIMITE MINIMO
+			DEF		RES_FLT_59	PI4_ERR		// [Read]					ERROR
+			DEF		RES_FLT_60	PI4_RP		// [Read]	[%]				RESULTANTE PROPORCIONAL
+			DEF		RES_FLT_61	PI4_RI		// [Read]	[%]				RESULTANTE INTEGRAL
+			DEF		RES_FLT_62	PI4_RIS		// [Read]	[%]				RESULTANTE INTEGRAL ACUMULATIVO
+			DEF		RES_FLT_63	PI4_OUT		// [Read]	[%]				DEMANDA DE CONTROL
+			DEF		RES_FLT_64	PI4_OUT_D	// [Read]	[%]				DEMANDA DE CONTROL (DOBLE) DIRECTA
+			DEF		RES_FLT_65	PI4_OUT_I	// [Read]	[%]				DEMANDA DE CONTROL (DOBLE) INVERSA
+			
+	//.......................................................................................
+	// VARIABLES: [ VARIABLES TEST ]
+	
+	DEF		RES_BIT_54	SS_TEST			// [WRITE]	[ACTIVAR/PARO]		ACTIVACION DE PRUEBA GENERAL DE SISTEMA 
+	DEF		RES_BIT_55	TEST			// [READ]	[ACTIVO/INACTIVO]	ACTIVACION DE PRUEBA
+	DEF		RES_FLT_73	TEST_STEP		// [READ]						RESPUESTA TEST
+	DEF		ADF_51		T_TEST_1		// [READ]	[SEG]				TIEMPO DE PRUEBA 1
+	DEF		ADF_52		T_TEST_2		// [READ]	[SEG]				TIEMPO DE PRUEBA 2
+	DEF		ADF_53		T_TEST_3		// [READ]	[SEG]				TIEMPO DE PRUEBA 3
+	DEF		ADF_54		T_TEST_4		// [READ]	[SEG]				TIEMPO DE PRUEBA 4
+	DEF		ADF_55		T_TEST_5		// [READ]	[SEG]				TIEMPO DE PRUEBA 5
+	DEF		ADF_56		T_TEST_6		// [READ]	[SEG]				TIEMPO DE PRUEBA 6
+	DEF		ADF_57		T_TEST_7		// [READ]	[SEG]				TIEMPO DE PRUEBA 7
+	DEF		ADF_58		T_TEST_8		// [READ]	[SEG]				TIEMPO DE PRUEBA 8
+	DEF		ADF_59		T_TEST_9		// [READ]	[SEG]				TIEMPO DE PRUEBA 9
+	DEF		ADF_60		T_TEST_10		// [READ]	[SEG]				TIEMPO DE PRUEBA 10
+	
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Inicializar variables
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	[VAR] = [VALUE]		INITIALIZE		
+//
+//	SP_SAT = 22.5 		INITIALIZE 		// Supply air temp SetPoint
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	// VARIABLES: [ SENSORES Y SETPOINTS ]
+		SP_SPT		= 23		INITIALIZE	// [°C]
+		SP_SPT_MAX	= 28		INITIALIZE	// [°C]
+		SP_SPT_MIN	= 18		INITIALIZE	// [°C]
+
+		Y1			= 28		INITIALIZE	// [°C]
+		Y2			= 12		INITIALIZE	// [°C]
+		X1			= 0			INITIALIZE	// [°C]
+		X2			= 100		INITIALIZE	// [°C]
+
+	// VARIABLES: [ TIMERS ]
+		LM_TM		= 10000		INITIALIZE	// [SEG]
+
+	// VARIABLES: [ PRINCIPAL ]
+		DL_VSUM_ON		= 3		INITIALIZE	// [SEG]
+		DL_VSUM_OFF		= 60	INITIALIZE	// [SEG]
+	
+		DL_TM_ON		= 30	INITIALIZE	// [SEG]
+		DL_TM_OFF		= 5		INITIALIZE	// [SEG]
+	
+		DL_FT_ON		= 35	INITIALIZE	// [SEG]
+		DL_FT_OFF		= 3		INITIALIZE	// [SEG]
+	
+	//.......................................................................................
+	// VARIABLES: [ VENTILACION SUMINISTRO ]
+
+		VEL_MAX				= 80	INITIALIZE // [%]
+		VEL_MIN				= 30	INITIALIZE // [%]
+	
+	// VARIABLES: [ TEMPERATURA ]
+	
+		LM_AL_TM		= 2		INITIALIZE	// [°C]
+		
+	// VARIABLES DE CONTROLES DE DEMANDA
+			
+		// VARIABLES: PI3 TEMPERATURA AREA 
+			PI3_DIR		= 1		INITIALIZE	// [1/-1]
+			PI3_P		= 5		INITIALIZE	// [#.#]
+			PI3_I		= 0.1		INITIALIZE	// [#.#]
+			PI3_MAX		= 100	INITIALIZE	// [%]
+			PI3_MIN		= 0		INITIALIZE	// [%]
+	
+		// VARIABLES: PI4 TEMPERATURA SUMINISTRO 
+			PI4_DIR		= 1		INITIALIZE	// [1/-1]
+			PI4_P		= 5		INITIALIZE	// [#.#]
+			PI4_I		= 0.1	INITIALIZE	// [#.#]
+			PI4_MAX		= 100	INITIALIZE	// [%]
+			PI4_MIN		= 0		INITIALIZE	// [%]
+			
+	// VARIABLES: [ VARIABLES TEST ]
+		T_TEST_1		= 1		INITIALIZE	// [SEG]
+		T_TEST_2		= 5 	INITIALIZE	// [SEG]
+		T_TEST_3		= 15	INITIALIZE	// [SEG]
+		T_TEST_4		= 20	INITIALIZE	// [SEG]
+		T_TEST_5		= 25	INITIALIZE	// [SEG]
+		T_TEST_6		= 120	INITIALIZE	// [SEG]
+		T_TEST_7		= 125	INITIALIZE	// [SEG]
+		T_TEST_8		= 175	INITIALIZE	// [SEG]
+		T_TEST_9		= 200	INITIALIZE	// [SEG]
+		T_TEST_10		= 250	INITIALIZE	// [SEG]
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// LÓGICA DE OPERACIÓN
+/////////////////////////////////////////////////////////////////////////////////////////////
+// START PROGRAM:	
+/////////////////////////////////////////////////////////////////////////////////////////////
+// PLC-01
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	// ARRANQUE MANUAL DESDE ENTRADA
+	
+	IF MANUAL == ON AND P_MANUAL == OFF AND ACT_MAN == OFF THEN ACT_MAN = ON ALSO P_MANUAL = ON
+	IF MANUAL == ON AND P_MANUAL == OFF AND ACT_MAN == ON THEN ACT_MAN = OFF ALSO P_MANUAL = ON
+	IF MANUAL == OFF THEN P_MANUAL = OFF
+
+	// BLOQUE 1: SENSORES Y SETPOINTS 
+	
+		CALL SENSORES
+		
+		CALL SETPOINTS
+		
+		
+	// BLOQUE 2: TIMERS 
+	
+		IF RES_BIT_37 == ON AND RES_BIT_242 = OFF THEN CALL TIMERS ALSO RES_BIT_242 = ON
+		IF RES_BIT_37 == 0FF THEN RES_BIT_242 = OFF
+
+		
+	// BLOQUE 3: TEST DE SISTEMA
+		IF SS_TEST == ON THEN CALL TEST_SISTEMA ALSO JUMP FINAL 
+		
+		
+	// BLOQUE 4: PARO POR ALARMA
+	
+		// ALARMA GENERAL
+			IF AL_VSUM == ON OR AL_TM == ON OR AL_FT == ON THEN AL_SYS = ON ELSE AL_SYS = OFF	
+	
+		// RESET ALARMA CRITICA
+			IF RESET_ALM == ON THEN ALM_SF = OFF ALSO RESET_ALM = OFF
+		
+		// ALARMA CRITICA
+			IF ALM_SF == ON THEN ALM_PARO = ON ELSE ALM_PARO = OFF
+		
+			IF ALM_PARO == ON THEN CALL PARO_ALARMA ALSO JUMP FINAL
+					
+
+	// BLOQUE 5: CONTROLES DE DEMANDA DEL SISTEMA
+	
+		// PERMISIVO PARA ACUMULADOR DE GENERADORES DE DEMANDA [ RES_BIT_241 ]
+			IF RES_BIT_37 != RES_BIT_240 THEN RES_BIT_241 = ON ALSO RES_BIT_240 = RES_BIT_37 ELSE RES_BIT_241 = OFF
+	
+		// CONTROL DE DEMANDA DE TEMPERATURA (ZONA)
+			PI3_VAR = TEMP
+			PI3_SP = SP_SPT
+			CALL PI3
+			// CONVERSION DE DEMANDA DE TEMPERATURA AREA A SETPOINT DE SUMINISTRO DE AIRE
+				Y0 = Y1 - Y2
+				X0 = X1 - X2
+				M = Y0 / X0
+				BX = M * X1
+				B = Y1 - BX
+			YX = M * PI3_OUT
+			SP_SAT = YX + B
+		
+		// CONTROL DE DEMANDA DE TEMPERATURA (SUMINISTRO)
+			PI4_VAR = SAT
+			PI4_SP = SP_SAT
+			CALL PI4
+			CN_CCV = PI4_OUT_D
+			CN_HCV = PI4_OUT_I
+			
+		
+	// BLOQUE 6: ARRANQUE DE SISTEMA
+	
+		// SELECTOR DE MODO DE OPERACION
+			IF MODO == ON THEN SS_SYS = ACT_HOR ELSE SS_SYS = ACT_MAN
+			
+	
+		// PROCESO DE ARRANQUE Y PARO DE SISTEMA
+			IF SS_SYS == OFF THEN JUMP PARO 
+			
+		
+			// ARRANQUE
+		
+				// ACTIVACIÓN: CONTROL DE VENTILACION SUMINISTRO
+					IF T_SYS_ON > DL_VSUM_ON THEN SS_VSUM = ON
+			
+				// ACTIVACION: CONTROL DE TEMPERATURA 
+					IF T_SYS_ON > DL_TM_ON AND ST_VSUM == ON THEN SS_TM = ON 
+					
+				// ACTIVACION: CONTROL DE FILTRACION 
+					IF T_SYS_ON > DL_FT_ON AND ST_VSUM == ON THEN SS_FT = ON
+					
+				// ESTADO GENERAL DE SISTEMA
+					IF ST_VSUM == ON AND ST_TM == ON AND ST_FT == ON THEN ST_SYS = ON ELSE ST_SYS = OFF
+			
+				JUMP MODULOS
+				
+		
+			// PARO
+			[PARO]
+		
+				// PARO: CONTROL DE FILTRACION 
+					IF T_SYS_OFF > DL_FT_OFF THEN SS_FT = OFF
+			
+				// PARO: CONTROL DE TEMPERATURA 
+					IF T_SYS_OFF > DL_TM_OFF THEN SS_TM = OFF 
+					
+				// PARO: CONTROL DE VENTILACION SUMINISTRO
+					IF T_SYS_OFF > DL_VSUM_OFF AND ST_TM == OFF THEN SS_VSUM = OFF
+					
+				// ESTADO GENERAL DE SISTEMA
+					IF ST_VSUM == OFF AND ST_TM == OFF AND ST_FT == OFF THEN ST_SYS = OFF ELSE ST_SYS = ON
+					
+	
+	// BLOQUE 7: MODULOS DE CONTROL
+	[MODULOS]
+		
+		// MODULO: CONTROL DE VENTILACION DE SUMINISTRO 
+			CALL VENTILACION_SUMINISTRO 
+		
+		// MODULO: CONTROL DE TEMPERATURA 
+			CALL TEMPERATURA 
+		
+		// MODULO: CONTROL DE FILTRACCION
+			CALL FILTRACION 
+
+	[FINAL]
+END
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// SUBRUTINAS PLC-01
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+
+//...........................................................................................
+	// AJUSTE DE LECTURA DE SENSORES
+	SUB_BEGIN [SENSORES]
+	
+		// TEMPERATURA DE SUMINISTRO DE AIRE
+		SAT = IN_SAT
+		
+		// TEMPERATURA RETORNO DE AIRE
+		RAT = IN_RAT
+		
+		// TEMPERATURA DE CUARTO 1
+		SPT = IN_SPT
+	
+	SUB_END
+	
+//...........................................................................................
+	// AJUSTE DE PARAMETROS DE SETPOINTS
+	SUB_BEGIN [SETPOINTS]
+	
+		// SETPOINT TEMPERATURA DE CUARTO
+			IF SP_SPT > SP_SPT_MAX THEN SP_SPT = SP_SPT_MAX
+			IF SP_SPT < SP_SPT_MIN THEN SP_SPT = SP_SPT_MIN
+	
+//...........................................................................................
+	// TIMERS DEL SISTEMA
+	SUB_BEGIN [TIMERS]
+		
+		// TIMER: CONTROL DE ARRANQUE DE SISTEMA
+		IF SS_SYS == ON THEN T_SYS_ON = T_SYS_ON + 1 ELSE T_SYS_ON = 0
+		IF T_SYS_ON > LM_TM THEN T_SYS_ON = LM_TM
+		IF SS_SYS == OFF THEN T_SYS_OFF = T_SYS_OFF + 1 ELSE T_SYS_OFF = 0
+		IF T_SYS_OFF > LM_TM THEN T_SYS_OFF = LM_TM
+		
+		// TIMER: CONTROL DE VENTILACION SUMINISTRO
+		IF SS_VSUM == ON THEN T_VSUM_ON = T_VSUM_ON + 1 ELSE T_VSUM_ON = 0
+		IF T_VSUM_ON > LM_TM THEN T_VSUM_ON = LM_TM
+		IF SS_VSUM == OFF THEN T_VSUM_OFF = T_VSUM_OFF + 1 ELSE T_VSUM_OFF = 0
+		IF T_VSUM_OFF > LM_TM THEN T_VSUM_OFF = LM_TM
+		
+		// TIMER: CONTROL DE TEMPERATURA
+		IF SS_TM == ON THEN T_TM_ON = T_TM_ON + 1 ELSE T_TM_ON = 0
+		IF T_TM_ON > LM_TM THEN T_TM_ON = LM_TM
+		IF SS_TM == OFF THEN T_TM_OFF = T_TM_OFF + 1 ELSE T_TM_OFF = 0
+		IF T_TM_OFF > LM_TM THEN T_TM_OFF = LM_TM
+		
+		// TIMER: CONTROL DE FILTRACION
+		IF SS_FT == ON THEN T_FT_ON = T_FT_ON + 1 ELSE T_FT_ON = 0
+		IF T_FT_ON > LM_TM THEN T_FT_ON = LM_TM
+		IF SS_FT == OFF THEN T_FT_OFF = T_FT_OFF + 1 ELSE T_FT_OFF = 0
+		IF T_FT_OFF > LM_TM THEN T_FT_OFF = LM_TM
+		
+		// TIMER: CONTROL DE VENTILADOR SUMINISTRO
+		IF ST_SF == ON THEN T_SF_ON = T_SF_ON + 1 ELSE T_SF_ON = 0
+		IF T_SF_ON > LM_TM THEN T_SF_ON = LM_TM
+		IF ST_SF == OFF THEN T_SF_OFF = T_SF_OFF + 1 ELSE T_SF_OFF = 0
+		IF T_SF_OFF > LM_TM THEN T_SF_OFF = LM_TM
+		
+		// TIMER: TEST
+		IF TEST == ON THEN T_TEST_ON = T_TEST_ON + 1 ELSE T_TEST_ON = 0
+	
+	SUB_END
+	
+
+	
+
+	
+/////////////////////////////////////////////////////////////////////////////////////////////
+// PLC-02
+/////////////////////////////////////////////////////////////////////////////////////////////
+PLC_2_START 
+
+
+
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// SUBRUTINAS PLC-02
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+
+//...........................................................................................
+	// MODULO: CONTROL DE VENTILACION SUMINISTRO
+	SUB_BEGIN [VENTILACION_SUMINISTRO]
+	
+		IF SS_VSUM == OFF THEN JUMP VSUM_PARO
+		
+		// MODULO: ACTIVO
+			// ARRANQUE
+				SS_SF = ON
+				
+				IF T_VSUM_ON > 10 THEN CN_SF = VEL_MAX ALSO ST_VSUM = ON ELSE CN_SF = VEL_MIN
+			
+			// ALARMA DE MODULO DE CONTROL
+				IF T_VSUM_ON > 20 AND T_SF_OFF > 20 THEN ALM_SF = ON
+				
+			JUMP VSUM_SALIDA
+			
+			
+		[VSUM_PARO]
+		// MODULO: INACTIVO
+			// PARO
+				CN_SF = VEL_MIN
+				
+				IF T_VSUM_OFF > 20 THEN SS_SF = OFF ALSO ST_VSUM = OFF
+		
+		
+		[VSUM_SALIDA]
+		// ALARMA GENERAL DE MODULO DE CONTROL
+			AL_VSUM = ALM_SF 
+		
+	SUB_END
+	
+//...........................................................................................
+	// MODULO: CONTROL DE TEMPERATURA
+	SUB_BEGIN [TEMPERATURA]
+	
+		// SELECTOR DE TEMPERATURA EN OPERACION
+			IF SL_TEMP == ON THEN TEMP = SPT ELSE TEMP = RAT
+			
+		
+		IF SS_TM == OFF THEN JUMP TM_PARO
+		
+		// MODULO: ACTIVO
+			// ACTIVACION
+				PI3_SS = ON
+				PI4_SS = ON
+				ST_TM = ON
+				
+			// ALARMA DE TEMPERATURAS
+				// TEMPERATURA DE AREA 
+					IF T_TM_ON > 300 AND TEMP > SP_SPT + LM_AL_TM THEN AL_TEMP_H = ON ELSE AL_TEMP_H = OFF 
+					IF T_TM_ON > 300 AND TEMP < SP_SPT - LM_AL_TM THEN AL_TEMP_L = ON ELSE AL_TEMP_L = OFF
+				
+				// TEMPERATURA DE SUMINISTRO
+					IF T_TM_ON > 300 AND SAT > SP_SAT + LM_AL_TM THEN AL_SAT_H = ON ELSE AL_SAT_H = OFF 
+					IF T_TM_ON > 300 AND SAT < SP_SAT - LM_AL_TM THEN AL_SAT_L = ON ELSE AL_SAT_L = OFF 
+			
+			JUMP TM_SALIDA
+				
+		
+		[TM_PARO]
+		// MODULO: INACTIVO
+			// PARO
+				PI3_SS = OFF
+				PI4_SS = OFF
+				ST_TM = OFF 
+				AL_TEMP_H = OFF 
+				AL_TEMP_L = OFF
+				AL_SAT_H = OFF 
+				AL_SAT_L = OFF 
+				
+		
+		[TM_SALIDA]
+		// ALARMA GENERAL DE MODULO DE CONTROL
+			IF AL_TEMP_H == ON OR AL_TEMP_L == ON OR AL_SAT_H == ON OR AL_SAT_L == ON THEN AL_TM = ON ELSE AL_TM = OFF 
+	
+	SUB_END
+	
+//...........................................................................................
+	// MODULO: CONTROL DE FILTRACION
+	SUB_BEGIN [FILTRACION]
+		
+		IF SS_FT == OFF THEN JUMP FT_PARO
+		
+		// MODULO: ACTIVO
+			// ESTADO DE FILTROS 1
+				IF T_FT_ON > 300 THEN ST_FT1 = IN_FT1 ELSE ST_FT1 = 0
+				
+			// ESTADO DE FILTROS 2
+				IF T_FT_ON > 300 THEN ST_FT2 = IN_FT2 ELSE ST_FT2 = 0
+					
+			ST_FT = ON
+		
+			JUMP FT_SALIDA
+		
+		
+		[FT_PARO]
+		// MODULO: INACTIVO
+			ST_FT1 = OFF
+			ST_FT2 = OFF 
+			ST_FT = OFF
+		
+		[FT_SALIDA]
+		// ALARMA GENERAL DE MODULO DE CONTROL 
+			IF ST_FT1 == ON OR ST_FT2 == ON THEN AL_FT = ON ELSE AL_FT = OFF 
+	
+	SUB_END
+	
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// PLC-03
+/////////////////////////////////////////////////////////////////////////////////////////////
+PLC_3_START 
+
+	
+	
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// SUBRUTINAS PLC-03
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+
+//...........................................................................................
+	// PARO POR ALARMA
+	SUB_BEGIN [PARO_ALARMA]
+	
+		// DESACTIVACIÓN DE CONTROL DE VENTILADORES
+			PI3_SS = OFF
+			PI4_SS = OFF
+		
+			SS_SF = OFF 
+			CN_SF = 0 
+			CN_HCV = 0 
+			CN_CCV = 0 
+			
+			AL_TEMP_H = 0
+			AL_TEMP_L = 0
+			AL_SAT_H = 0
+			AL_SAT_L = 0
+			
+			ACT_MAN = OFF 
+		
+			SS_SYS = OFF 
+			ST_SYS = OFF 
+	
+			SS_VSUM = OFF 
+			ST_VSUM = OFF 
+	
+			SS_TM = OFF 
+			ST_TM = OFF
+			AL_TM = OFF
+	
+			SS_FT = OFF 
+			ST_FT = OFF 
+			AL_FT = OFF 
+	
+	SUB_END
+
+//...........................................................................................
+	// TEST DE SISTEMA
+	SUB_BEGIN [TEST_SISTEMA]
+
+		// TEST ACTIVO
+			
+			TEST = ON 
+			
+			IF TEST_STEP = 0 AND T_TEST_ON > T_TEST_1 THEN TEST_STEP = 1 ALSO SS_SF = ON ALSO JUMP TEST_INICIO
+			
+			IF TEST_STEP = 1 AND T_TEST_ON > T_TEST_2 THEN TEST_STEP = 2 ALSO CN_SF = 100
+			
+			IF TEST_STEP = 2 AND T_TEST_ON > T_TEST_3 THEN TEST_STEP = 3 ALSO CN_SF = 50
+			
+			IF TEST_STEP = 3 AND T_TEST_ON > T_TEST_4 THEN TEST_STEP = 4 ALSO CN_CCV = 100
+			
+			IF TEST_STEP = 4 AND T_TEST_ON > T_TEST_5 THEN TEST_STEP = 5 ALSO CN_HCV = 100
+			
+			IF TEST_STEP = 5 AND T_TEST_ON > T_TEST_6 THEN TEST_STEP = 6 ALSO CN_CCV = 50
+			
+			IF TEST_STEP = 6 AND T_TEST_ON > T_TEST_7 THEN TEST_STEP = 7 ALSO CN_HCV = 50
+			
+			IF TEST_STEP = 7 AND T_TEST_ON > T_TEST_8 THEN TEST_STEP = 8 ALSO CN_CCV = 75 ALSO CN_HCV = 75
+			
+			IF TEST_STEP = 8 AND T_TEST_ON > T_TEST_9 THEN TEST_STEP = 9 ALSO CN_CCV = 0 ALSO CN_HCV = 0 
+			
+			IF TEST_STEP = 9 AND T_TEST_ON > T_TEST_10 THEN TEST_STEP = 10 ALSO JUMP TEST_PARO 
+			
+			JUMP TEST_SALIDA
+		
+		[TEST_INICIO]
+		// RESET VARIABLES
+			CN_SF = 0
+			CN_CCV = 0
+			CN_HCV = 0
+			
+			JUMP TEST_SALIDA
+		
+		[TEST_PARO]
+		// TEST PARO
+			CN_SF = 0
+			SS_SF = OFF
+			TEST = OFF
+			SS_TEST = OFF
+		
+		[TEST_SALIDA]
+
+	SUB_END 
+	
+	//...........................................................................................
+	// CONTROL DE DEMANDA 3 (DOBLE)
+	SUB_BEGIN [PI3]
+		
+		// CALCULO DE ERROR DEL SISTEMA
+		PI3_ERR = PI3_VAR - PI3_SP
+		// DIRECCION DEL CONTROL DE DEMANDA
+		PI3_ERR = PI3_ERR * PI3_DIR
+			
+			// INTEGRACION DE PARAMENTRO P AL CALCULO DE LA DEMANDA 
+			IF PI3_SS == ON THEN PI3_RP = PI3_ERR * PI3_P ELSE PI3_RP = 0
+			// INTEGRACION DE PARAMENTRO I AL CALCULO DE LA DEMANDA 
+			IF PI3_SS == ON THEN PI3_RI = PI3_ERR * PI3_I ELSE PI3_RI = 0
+			// ACUMULACION DEL PARAMETRO I AL CALCULO DE LA DEMANDA 
+			IF RES_BIT_241 == ON THEN PI3_RIS = PI3_RIS + PI3_RI
+			IF PI3_SS == OFF THEN PI3_RIS = 0
+		
+			// RANGO DE OPERACIÓN DE PARAMETRO I ACUMULADO
+			IF PI3_RIS > PI3_MAX + 10 THEN PI3_RIS = PI3_MAX + 10
+			IF PI3_RIS < PI3_MIN - 10 THEN PI3_RIS = PI3_MIN - 10
+		
+		// DEMANDA DE SALIDA
+		PI3_OUT = PI3_RP + PI3_RIS
+		
+			// RANGO DE OPERACION DE PARAMETRO DE SALIDA
+			IF PI3_OUT > PI3_MAX THEN PI3_OUT = PI3_MAX
+			IF PI3_OUT < PI3_MIN THEN PI3_OUT = PI3_MIN
+			
+	SUB_END
+	
+//...........................................................................................
+	// CONTROL DE DEMANDA 4 (DOBLE)
+	SUB_BEGIN [PI4]
+		
+		// CALCULO DE ERROR DEL SISTEMA
+		PI4_ERR = PI4_VAR - PI4_SP
+		// DIRECCION DEL CONTROL DE DEMANDA
+		PI4_ERR = PI4_ERR * PI4_DIR
+			
+			// INTEGRACION DE PARAMENTRO P AL CALCULO DE LA DEMANDA 
+			IF PI4_SS == ON THEN PI4_RP = PI4_ERR * PI4_P ELSE PI4_RP = 50
+			// INTEGRACION DE PARAMENTRO I AL CALCULO DE LA DEMANDA 
+			IF PI4_SS == ON THEN PI4_RI = PI4_ERR * PI4_I ELSE PI4_RI = 0
+			// ACUMULACION DEL PARAMETRO I AL CALCULO DE LA DEMANDA 
+			IF RES_BIT_241 == ON THEN PI4_RIS = PI4_RIS + PI4_RI
+			IF PI4_SS == OFF THEN PI4_RIS = 0
+		
+			// RANGO DE OPERACIÓN DE PARAMETRO I ACUMULADO
+			IF PI4_RIS > PI4_MAX + 10 THEN PI4_RIS = PI4_MAX + 10
+			IF PI4_RIS < PI4_MIN - 10 THEN PI4_RIS = PI4_MIN - 10
+		
+		// DEMANDA DE SALIDA
+		PI4_OUT = PI4_RP + PI4_RIS
+		
+			// RANGO DE OPERACION DE PARAMETRO DE SALIDA
+			IF PI4_OUT > PI4_MAX THEN PI4_OUT = PI4_MAX
+			IF PI4_OUT < PI4_MIN THEN PI4_OUT = PI4_MIN
+			
+		// ASIGNACION A SALIDA DE DOS VIAS
+		PI4_OUT = PI4_OUT * 2
+		
+		PI4_OUT_D = PI4_OUT - 100
+		IF PI4_OUT_D < 0 THEN PI4_OUT_D = 0
+		
+		PI4_OUT_I = 100 - PI4_OUT 
+		IF PI4_OUT_I < 0 THEN PI4_OUT_I = 0
+			
+	SUB_END 

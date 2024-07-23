@@ -1,0 +1,932 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+[PAC] // SISTEMA DE CONTROL DE PLANTA DE AGUA CALIENTE
+COMPILER_CALL_CAN_SPAN_PLCS
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Auth: Carlos Jiménez		@cjhirashi		<cjimenez@atomcontroles.com>
+// Auth: Marcelo Piña		@mpina 			<mpina@atomcontroles.com>
+// Vers: 1.0.0
+// Desc: Planta de Agua de caliente
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Puertos de comunicación
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	PROTOCOL 			PROTOCOL_ASCII_TERMINAL	
+//						PROTOCOL_OPTO_22_SLAVE
+//						PROTOCOL_N2_OPEN_SLAVE	
+//						PROTOCOL_MODBUS_SLAVE
+//						PROTOCOL_BACNET_MSTP
+//						PROTOCOL_OPTO22_MASTER
+//						PROTOCOL_MODBUS_MASTER
+//
+//	DEVICE_ADDRESS 		1 to 253
+//
+//	BAUD_RATE 			2400, 4800, 9600, 19200, 38400, 57600, 76800
+//
+//	PARITY 				PARITY_NONE, PARITY_ODD, PARITY_EVEN
+//
+//	STOP_BIT 			STOP_BIT_0, STOP_BIT_1
+//
+//
+//	COMM [#] 	[PROTOCOL] 					DEVICE_ADDRESS = #		BAUD_RATE = [#]		PARITY_ODD [OPTION]
+//
+//	COMM 1 		PROTOCOL_MODBUS_SLAVE		DEVICE_ADDRESS = 1		BAUD_RATE = 9600	PARITY_ODD STOP_BIT_1
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	//COMM 1		PROTOCOL_BACNET_MSTP   		DEVICE_ADDRESS = 2  
+	//COMM 2		PROTOCOL_OPTO_22_SLAVE   	DEVICE_ADDRESS = 2 
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Puertos remotos
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	REMOTE	[PORT] 	[VAR]	DEVICE_ADDRESS [#]		[NAME]		// RMT_# Description
+//
+//	REMOTE	COM1 	AI_1	DEVICE_ADDRESS 2		SAT			// RMT_1 Analog Inpunt
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Calibración de entradas
+/////////////////////////////////////////////////////////////////////////////////////////////
+// 	0	AI_TYPE_12bit				// ADC 12-bits : 0 - 4095 (no calibration)
+//	1	AI_TYPE_1kNI_C				// 1000 ohms Nickel RTD °C (DIP SWITCH = ON, calibrated with offset)
+//	2	AI_TYPE_1kSI_C				// 1000 ohms Silicon PTC °C (DIP SWITCH = ON, calibrated with offset)
+//	3	AI_TYPE_1kA99_C				// 1000 ohms Silicon A99 °C (DIP SWITCH = ON, calibrated with offset)
+//	4	AI_TYPE_0_10_vdc			// 0-10.0 vdc or (0-20 ma. @250 ohms, calibrated with multiplier)
+//	5	AI_TYPE_4_20_ma				// 4-20ma @ 250 ohms (calibrated with multiplier)
+//	6	AI_TYPE_1kNI_F				// 1000 ohms Nickel RTD °F (DIP SWITCH = ON, calibrated with offset)
+//	7	AI_TYPE_1kSI_F				// 1000 ohms Silicon PTC °F (DIP SWITCH = ON, calibrated with offset)
+//	8	AI_TYPE_1kA99_F				// 1000 ohms Silicon A99 °F (DIP SWITCH = ON, calibrated with offset)
+//	9	AI_TYPE_RATIO				// Ratiometric (0-100%=10-90FSR=0.5-4.5VDC, calibrated with multiplier)
+//	10	AI_TYPE_THERMOCOUPLE_J_C	// Type J thermocouple (51.7 uV/°C x191 amp, calibrated with offset)
+//	11	AI_TYPE_THERMOCOUPLE_K_C	// Type K thermocouple (40.6 uV/°C x191 amp, calibrated with offset)
+//	12	AI_TYPE_ST_S3K_10K			// 10K Type III NTC (0K Ohms @ 25°C, calibrated with offset)
+//	13	AI_TYPE_TC_1000_1			// Current transformer (NXSF only, 1000:1 ratio, calibrated with multiplier)
+//	14	AI_TYPE_DWYER_1K_C			// 1000 ohms Platinum RTD °C (DIP SWITCH = ON, calibrated with offset)
+//	15	AI_TYPE_DWYER_1K_F			// 1000 ohms Platinum RTD °F (DIP SWITCH = ON, calibrated with offset)
+//	16	AI_TYPE_NTC_10K_III_C_PU	// 10K Type III NTC (0K Ohms @ 77°F, calibrated with offset)
+//	17	AI_TYPE_GREYSTONE_20K		// Greystone 20K temperature sensor TSAPA20x\n" );	
+// Added on v3.08.0
+//	18	AI_TYPE_OHMS_12V			// Measures Ohms, other side connected to +12V ref
+//	19	AI_TYPE_OHMS_5VPU			// Measures Ohms, other side connected to 0V, using internal 5V pull up
+//	20	AI_TYPE_NTC_CURVE_A_12V		// NTC using curve A constants, other side connected to +12V ref
+//	21	AI_TYPE_NTC_CURVE_A_5VPU	// NTC using curve A constants, other side connected to 0V, using internal 5V pull up
+//	22	AI_TYPE_NTC_CURVE_B_12V		// NTC using curve B constants, other side connected to +12V ref
+//	23	AI_TYPE_NTC_CURVE_B_5VPU	// NTC using curve B constants, other side connected to 0V, using internal 5V pull up
+//
+//	AI_CALIBRACION // En variables resistivas este valor se refiere a un Offset, en el resto cumple como multiplicador
+//	
+//	AI_CONFIGURATION 	[VAR]		[# TYPE] 	AI_CALIBRATION = [FLOUT]
+//
+//	AI_CONFIGURATION 	AI_1		12   		AI_CALIBRATION = 1.00		// NTC 10K Ohm TYPE III @ 25°C
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+	
+	AI_CONFIGURATION	AI_1 = 14	AI_CALIBRATION = 1.000   	// 1000 ohms Platinum RTD °C (DIP SWITCH = ON, calibrated with offset)
+	AI_CONFIGURATION	AI_2 = 14	AI_CALIBRATION = 1.000   	// 1000 ohms Platinum RTD °C (DIP SWITCH = ON, calibrated with offset)
+	AI_CONFIGURATION	AI_3 = 4	AI_CALIBRATION = 10.000    	// 0-10.0 vdc    or    (0-20 ma.  @250 ohms)
+	AI_CONFIGURATION	BI_4 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION 	BI_5 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION 	BI_6 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION 	BI_7 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION 	BI_8 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION	BI_9 = 0		// ADC 12-bits : 0 - 4095
+	AI_CONFIGURATION	BI_10 = 0		// ADC 12-bits : 0 - 4095
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Definición de variables
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	DEF		[VAR]		[NANE]	
+//
+//	DEF		AI_1		SAT			// SUPPLY AIR TEMP
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	// INPUTS
+	DEF		AI_1		IN_SWT		// [Read]	[°C]				Temperatura de suministro de agua
+	DEF		AI_2		IN_RWT		// [Read]	[°C]				Temperatura de retorno de agua
+	DEF		AI_3		IN_DP		// [Read]	[PSI]				Presión Diferencial de circuito de agua 
+	DEF		BI_4		ST_BM1		// [Read]	[ACTIVO/INACTIVO]	Estado de operación de Bomba 1
+	DEF		BI_5		ST_BM2		// [Read]	[ACTIVO/INACTIVO]	Estado de operación de Bomba 2
+	DEF		BI_6		ST_BM3		// [Read]	[ACTIVO/INACTIVO]	Estado de operación de Bomba 3
+	DEF		BI_7		IN_EQ1		// [Read]	[ACTIVO/INACTIVO]	Estado de operación de Chiller 1
+	DEF		BI_8		IN_EQ2		// [Read]	[ACTIVO/INACTIVO]	Estado de operación de Chiller 2
+	DEF		BI_9		ST_VL1		// [Read]	[ABIERTA/CERRADA]	Estado de apertura de válvula de Chiller 1
+	DEF		BI_10		ST_VL2		// [Read]	[ABIERTA/CERRADA]	Estado de apertura de válvula de Chiller 1
+
+	// OUTPUTS
+	DEF		BO_1		SS_BM1		// [Read]	[ARRANQUE/PARO]		Arranque de Bomba 1
+	DEF		BO_2		SS_BM2		// [Read]	[ARRANQUE/PARO]		Arranque de Bomba 2
+	DEF		BO_3		SS_BM3		// [Read]	[ARRANQUE/PARO]		Arranque de Bomba 3
+	DEF		BO_4		SS_EQ1		// [Read]	[ARRANQUE/PARO]		Arranque de Chiller 1
+	DEF		BO_5		SS_EQ2		// [Read]	[ARRANQUE/PARO]		Arranque de Chiller 2
+	DEF		BO_6		OUT_VL1		// [Read]	[ABRIR/CERRAR]		Apertura de válvula de chiller 1
+	DEF		BO_7		OUT_VL2		// [Read]	[ABRIR/CERRAR]		Apertura de válvula de chiller 1
+
+	//.......................................................................................
+	// VARIABLES: [ SENSORES Y SETPOINTS ]
+
+	DEF		RES_FLT_1	SWT				// [READ]	[°C]				TEMPERATURA DE SUMINISTRO DE AGUA
+	DEF		RES_FLT_2	RWT				// [READ]	[°C]				TEMPERATURA DE RETORNO DE AGUA
+	DEF		RES_FLT_3	DP				// [READ]	[PSI]				PRESION DIFERENCIAL DE CIRCUITO DE AGUA
+	
+	DEF		ADF_1		SP_SWT			// [WRITE]	[°C]				SETPOINT DE TEMPERATURA DE SUMINISTRO
+	DEF		ADF_2		SP_SWT_MAX		// [READ]	[°C]				SETPOINT MAXIMO DE TEMPERATURA DE SUMINISTRO 
+	DEF		ADF_3		SP_SWT_MIN		// [READ]	[°C]				SETPOINT MINIMO DE TEMPERATURA DE SUMINISTRO
+	
+	DEF		ADF_4		ROT_D			// [WRITE]	[DIAS]				DIAS DE ROTACION
+	DEF		ADF_5		ROT_D_MAX		// [READ]	[DIAS]				DIAS DE ROTACION MAXIMOS
+	DEF		ADF_6		ROT_D_MIN		// [READ]	[DIAS]				DIAS DE ROTACION MINIMO 
+	
+	//.......................................................................................
+	// VARIABLES: [ TIMERS ]
+	
+	DEF		ADF_7		LM_TM			// [READ]	[SEG]				LIMITE DE CONTEO TIMERS 
+	
+	DEF		RES_FLT_4	T_SYS_ON		// [READ]	[SEG]				TIMER ON, ACTIVACION SISTEMA 
+	DEF		RES_FLT_5	T_SYS_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION SISTEMA 
+		
+	DEF		RES_FLT_6	T_BM_ON			// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL BOMBEO
+	DEF		RES_FLT_7	T_BM_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL BOMBEO
+		
+	DEF		RES_FLT_8	T_EQ_ON 		// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL EQUIPOS 
+	DEF		RES_FLT_9	T_EQ_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL EQUIPOS 
+		
+	DEF		RES_FLT_10	T_E1_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE EQUIPO 1
+	DEF		RES_FLT_11	T_E1_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO EQUIPO 1
+		
+	DEF		RES_FLT_12	T_V1_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE VALVULA 1
+	DEF		RES_FLT_13	T_V1_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO VALVULA 1 
+		
+	DEF		RES_FLT_14	T_E2_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE EQUIPO 2
+	DEF		RES_FLT_15	T_E2_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO EQUIPO 2
+		
+	DEF		RES_FLT_16	T_V2_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE VALVULA 2
+	DEF		RES_FLT_17	T_V2_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO VALVULA 2
+	
+	DEF		RES_FLT_18	T_B1_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE BOMBA 1
+	DEF		RES_FLT_19	T_B1_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO BOMBA 1
+	
+	DEF		RES_FLT_20	T_B2_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE BOMBA 2
+	DEF		RES_FLT_21	T_B2_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO BOMBA 2
+	
+	DEF		RES_FLT_22	T_B3_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE BOMBA 3
+	DEF		RES_FLT_23	T_B3_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO BOMBA 3
+	
+	DEF		RES_FLT_24	T_ES_ON			// [READ]	[SEG]				TIMER ON, ARRANQUE BOMBA 3
+	DEF		RES_FLT_25	T_ES_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO BOMBA 3
+	
+	DEF		RES_FLT_26	T_TEST_ON		// [READ]	[SEG]				TIMER ON, TEST
+	
+	//.......................................................................................
+	// VARIABLES: [ PRINCIPAL ]
+	
+	DEF		RES_BIT_1	MODO			// [WRITE]	[AUTO/MANUAL]		MODO DE ARRANQUE DE SISTEMA 
+	DEF		RES_BIT_2	ACT_HOR			// [READ]	[ACTIVO/INACTIVO]	ACTIVACION HORARIO DE SISTEMA
+	DEF		RES_BIT_3	ACT_MAN			// [WRITE]	[ACTIVO/INACTIVO]	ACTIVACION MANUAL DE SISTEMA
+	
+	DEF		RES_BIT_4	SS_SYS			// [READ]	[ACTIVAR/PARO]		ACTIVACION GENERAL DEL SISTEMA
+	DEF		RES_BIT_5	ST_SYS			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE ACTIVACION GENERAL DEL SISTEMA 
+	DEF		RES_BIT_6	AL_SYS			// [READ]	[ALARMA/NORMAL]		ALARMA GENERAL DEL SISTEMA
+	
+	DEF		RES_BIT_7	SS_BM			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	DEF		RES_BIT_8	ST_BM			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	DEF		RES_BIT_9	AL_BM			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	DEF		ADF_8		DL_BM_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE VENTILACION DE SUMINISTRO 
+	DEF		ADF_9		DL_BM_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+	
+	DEF		RES_BIT_10	SS_EQ			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE TEMPERATURA 
+	DEF		RES_BIT_11	ST_EQ			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE TEMPERATURA 
+	DEF		RES_BIT_12	AL_EQ			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE TEMPERATURA 
+	DEF		ADF_10		DL_EQ_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE TEMPERATURA 
+	DEF		ADF_11		DL_EQ_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE TEMPERATURA
+	
+	DEF		RES_BIT_13	ALM_PARO		// [READ]	[ALARMA/NORMAL]		ALARMA CRITICA PARA PARO DE SISTEMA 
+	DEF		RES_BIT_14	ALM_PARO_EQ		// [READ]	[ALARMA/NORMAL]		ALARMA CRITICA EQUIPOS 
+	DEF		RES_BIT_15	ALM_PARO_VL		// [READ]	[ALARMA/NORMAL]		ALARMA CRITICA VALVULAS
+	DEF		RES_BIT_16	ALM_PARO_BM		// [READ]	[ALARMA/NORMAL]		ALARMA CRITICA BOMBAS
+	DEF		RES_BIT_17	RESET_ALM		// [READ]	[RESET/NORMAL]		RESET DE ALARMA CRITICA 
+	
+	//.......................................................................................
+	// VARIABLES: [ BOMBAS ]
+	
+	DEF		RES_BIT_18	ALM_BM1			// [READ]	[ALARMA/NORMAL]		ALARMA DE BOMBA 1
+	DEF		RES_BIT_19	ALM_BM2			// [READ]	[ALARMA/NORMAL]		ALARMA DE BOMBA 1
+	DEF		RES_BIT_20	ALM_BM3			// [READ]	[ALARMA/NORMAL]		ALARMA DE BOMBA 1
+	
+	DEF		ADF_12		SER_BM1			// [READ]	[SERVICIO/NORMAL]	SERVICIO DE BOMBA 1
+	DEF		ADF_13		SER_BM2			// [READ]	[SERVICIO/NORMAL]	SERVICIO DE BOMBA 2
+	DEF		ADF_14		SER_BM3			// [READ]	[SERVICIO/NORMAL]	SERVICIO DE BOMBA 3
+	
+	DEF		RES_BIT_41	BM1				// [READ]	[ARRANQUE/PARO]		ARRANQUE DE SISTEMA BOMBAS 1
+	DEF		RES_BIT_42	BM2				// [READ]	[ARRANQUE/PARO]		ARRANQUE DE SISTEMA BOMBAS 2
+	DEF		RES_BIT_43	BM3				// [READ]	[ARRANQUE/PARO]		ARRANQUE DE SISTEMA BOMBAS 3
+	
+	DEF		RES_FLT_27	ST_BMS			// [READ]	[# EQ]				Número de bombas en operación
+	
+	DEF		RES_FLT_28	BM_MIN			// [READ]	[# EQ]				Equipos mínimos en operacion
+	DEF		RES_FLT_29	BM_OPER			// [READ]	[# EQ]				Bombas en operación 
+	
+	DEF		RES_BIT_44	BM_MST			// [READ]	[ARRANQUE/PARO]		Bomba maestra
+	DEF		RES_BIT_45	BM_SLV1			// [READ]	[ARRANQUE/PARO]		Bomba esclava 1
+	DEF		RES_BIT_46	BM_SLV2			// [READ]	[ARRANQUE/PARO]		Bomba esclava 2
+	
+	//DEF		RES_FLT_30	TO_BM1			// [READ]	[HORAS]				Tiempo de operación bomba 1
+	//DEF		RES_FLT_31	TO_BM2			// [READ]	[HORAS]				Tiempo de operación bomba 2
+	//DEF		RES_FLT_32	TO_BM3			// [READ]	[HORAS]				Tiempo de operación bomba 3
+	
+	DEF		RES_FLT_33	ROT_BM			// [READ]	[#]					Fase de rotación de bombas 
+	
+	//.......................................................................................
+	// VARIABLES: [ EQUIPOS ]
+	
+	DEF		RES_BIT_47	ALM_EQ1			// [READ]	[ALARMA/NORMAL]		ALARMA DE EQUIPO 1
+	DEF		RES_BIT_48	ALM_EQ2			// [READ]	[ALARMA/NORMAL]		ALARMA DE EQUIPO 2
+	
+	DEF		ADF_15		SER_EQ1			// [READ]	[SERVICIO/NORMAL]	SERVICIO DE EQUIPO 1
+	DEF		ADF_16		SER_EQ2			// [READ]	[SERVICIO/NORMAL]	SERVICIO DE EQUIPO 2
+	
+	DEF		RES_BIT_49	SS_VL1			// [READ]	[ABRIR/CERRAR]		CONTROL DE APERTURA DE VALVULA 1
+	DEF		RES_BIT_50	SS_VL2			// [READ]	[ABRIR/CERRAR]		CONTROL DE APERTURA DE VALVULA 2
+	
+	DEF		RES_BIT_51	ALM_VL1			// [READ]	[ALARMA/NORMAL]		ALARMA DE VALVULA 1
+	DEF		RES_BIT_52	ALM_VL2			// [READ]	[ALARMA/NORMAL]		ALARMA DE VALVULA 2
+	
+	DEF		RES_BIT_53	EQ1				// [READ]	[ARRANQUE/PARO]		ARRANQUE DE SISTEMA EQUIPOS 1
+	DEF		RES_BIT_54	EQ2				// [READ]	[ARRANQUE/PARO]		ARRANQUE DE SISTEMA EQUIPOS 2
+	
+	DEF		RES_BIT_55	ST_EQ1			// [READ]	[ABIERTA/CERRADA]	ESTADO DE VALVULA 1
+	DEF		RES_BIT_56	ST_EQ2			// [READ]	[ABIERTA/CERRADA]	ESTADO DE VALVULA 2
+	
+	DEF		RES_FLT_34	ST_EQS			// [READ]	[# EQ]				Número de equipos en operación 
+	
+	DEF		RES_FLT_35	EQ_MAX			// [READ]	[# EQ]				Equipos máximos en operación 
+	DEF		RES_FLT_36	EQ_OPER			// [READ]	[# EQ]				Equipos en operación 
+	
+	DEF		RES_BIT_57	EQ_MST			// [READ]	[ARRANQUE/PARO]		Equipo maestro
+	DEF		RES_BIT_58	EQ_SLV			// [READ]	[ARRANQUE/PARO]		Equipo esclavo
+	
+	//DEF		RES_FLT_37	TO_EQ1			// [READ]	[HORAS]				Tiempo de operación equipo 1
+	//DEF		RES_FLT_38	TO_EQ2			// [READ]	[HORAS]				Tiempo de operación equipo 2
+	
+	DEF		RES_FLT_41	ROT_EQ			// [READ]	[#]					Fase de rotación de equipos 
+	
+	//.......................................................................................
+	// VARIABLES: [ VARIABLES TEST ]
+	
+	DEF		RES_BIT_59	SS_TEST			// [WRITE]	[ACTIVAR/PARO]		ACTIVACION DE PRUEBA GENERAL DE SISTEMA 
+	DEF		RES_BIT_60	TEST			// [READ]	[ACTIVO/INACTIVO]	ACTIVACION DE PRUEBA
+	DEF		RES_FLT_42	TEST_STEP		// [READ]						RESPUESTA TEST
+	DEF		ADF_51		T_TEST_1		// [READ]	[SEG]				TIEMPO DE PRUEBA 1
+	DEF		ADF_52		T_TEST_2		// [READ]	[SEG]				TIEMPO DE PRUEBA 2
+	DEF		ADF_53		T_TEST_3		// [READ]	[SEG]				TIEMPO DE PRUEBA 3
+	DEF		ADF_54		T_TEST_4		// [READ]	[SEG]				TIEMPO DE PRUEBA 4
+	DEF		ADF_55		T_TEST_5		// [READ]	[SEG]				TIEMPO DE PRUEBA 5
+	DEF		ADF_56		T_TEST_6		// [READ]	[SEG]				TIEMPO DE PRUEBA 6
+	DEF		ADF_57		T_TEST_7		// [READ]	[SEG]				TIEMPO DE PRUEBA 7
+	DEF		ADF_58		T_TEST_8		// [READ]	[SEG]				TIEMPO DE PRUEBA 8
+	DEF		ADF_59		T_TEST_9		// [READ]	[SEG]				TIEMPO DE PRUEBA 9
+	DEF		ADF_60		T_TEST_10		// [READ]	[SEG]				TIEMPO DE PRUEBA 10
+	DEF		ADF_61		T_TEST_11		// [READ]	[SEG]				TIEMPO DE PRUEBA 11
+	
+	//.......................................................................................
+	// VARIABLES: [ CONTADOR DÍAS ]
+	
+	DEF		RES_FLT_43	COUNT_DAY		// [READ]	[DIAS]				CONTADOR DE DIAS 
+	DEF		RES_FLT_44	COUNT_HR		// [READ]	[HORAS]				CONTADOR DE HORAS 
+	DEF		RES_FLT_45	COUNT_MIN		// [READ]	[MINUTOS]			CONTADOR DE MINUTOS
+	DEF		RES_FLT_46	COUNT_SEC		// [READ]	[SEGUNDOS]			CONTADOR DE SEGUNDOS 
+	
+	DEF		ADF_62		TO_BM1_HR		// [READ]	[HORAS]				TIEMPO DE OPERACION HR BOMBA 1
+	DEF		ADF_63		TO_BM2_HR		// [READ]	[HORAS]				TIEMPO DE OPERACION HR BOMBA 2 
+	DEF		ADF_64		TO_BM3_HR		// [READ]	[HORAS]				TIEMPO DE OPERACION HR BOMBA 3 
+	
+	DEF		ADF_65		TO_EQ1_HR		// [READ]	[HORAS]				TIEMPO DE OPERACION HR EQUIPO 1 
+	DEF		ADF_66		TO_EQ2_HR		// [READ]	[HORAS]				TIEMPO DE OPERACION HR EQUIPO 2 
+	
+	//.......................................................................................
+	// VARIABLES: [ BLOQUEO DE SISTEMAS ]
+	
+	DEF		RES_BIT_61	BL_BM1			// [READ]	[ON/OFF]			BLOQUEO DE OPERACION DE BOMBA 1
+	DEF		RES_BIT_62	BL_BM2			// [READ]	[ON/OFF]			BLOQUEO DE OPERACION DE BOMBA 2
+	DEF		RES_BIT_63	BL_BM3			// [READ]	[ON/OFF]			BLOQUEO DE OPERACION DE BOMBA 3
+	
+	DEF		RES_BIT_64	BL_EQ1			// [READ]	[ON/OFF]			BLOQUEO DE OPERACION DE EQUIPO 1
+	DEF		RES_BIT_65	BL_EQ2			// [READ]	[ON/OFF]			BLOQUEO DE OPERACION DE EQUIPO 2
+	
+	DEF		RES_FLT_52	TO_BM1			// [READ]	[HORAS]				Tiempo de operación bomba 1
+	DEF		RES_FLT_53	TO_BM2			// [READ]	[HORAS]				Tiempo de operación bomba 2
+	DEF		RES_FLT_54	TO_BM3			// [READ]	[HORAS]				Tiempo de operación bomba 3
+	
+	DEF		RES_FLT_55	TO_EQ1			// [READ]	[HORAS]				Tiempo de operación equipo 1
+	DEF		RES_FLT_56	TO_EQ2			// [READ]	[HORAS]				Tiempo de operación equipo 2
+	
+/////////////////////////////////////////////////////////////////////////////////////////////
+// Inicializar variables
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+//	[VAR] = [VALUE]		INITIALIZE		
+//
+//	SP_SAT = 22.5 		INITIALIZE 		// Supply air temp SetPoint
+//
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	//.......................................................................................
+	// VARIABLES: [ SENSORES Y SETPOINTS ]
+
+		SP_SWT			= 45		INITIALIZE	// [°C]
+		SP_SWT_MAX		= 70		INITIALIZE	// [°C] 
+		SP_SWT_MIN		= 25		INITIALIZE  // [°C]
+		
+		ROT_D			= 7			INITIALIZE	// [DIAS]
+		ROT_D_MAX		= 31		INITIALIZE	// [DIAS]
+		ROT_D_MIN		= 1			INITIALIZE	// [DIAS]
+		
+	//.......................................................................................
+	// VARIABLES: [ TIMERS ]
+		LM_TM			= 10000		INITIALIZE	// [SEG]
+
+	//.......................................................................................
+	// VARIABLES: [ PRINCIPAL ]
+	
+		DL_BM_ON		= 3			INITIALIZE	// [SEG]
+		DL_BM_OFF		= 300		INITIALIZE	// [SEG]
+
+		DL_EQ_ON		= 30		INITIALIZE	// [SEG]
+		DL_EQ_OFF		= 3			INITIALIZE 	// [SEG]
+		
+	// VARIABLES: [ VARIABLES TEST ]
+		T_TEST_1		= 1		INITIALIZE	// [SEG]
+		T_TEST_2		= 5 	INITIALIZE	// [SEG]
+		T_TEST_3		= 15	INITIALIZE	// [SEG]
+		T_TEST_4		= 20	INITIALIZE	// [SEG]
+		T_TEST_5		= 25	INITIALIZE	// [SEG]
+		T_TEST_6		= 120	INITIALIZE	// [SEG]
+		T_TEST_7		= 125	INITIALIZE	// [SEG]
+		T_TEST_8		= 175	INITIALIZE	// [SEG]
+		T_TEST_9		= 200	INITIALIZE	// [SEG]
+		T_TEST_10		= 250	INITIALIZE	// [SEG]
+		T_TEST_11		= 310	INITIALIZE	// [SEG]
+	
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// LÓGICA DE OPERACIÓN
+/////////////////////////////////////////////////////////////////////////////////////////////
+// START PROGRAM:	
+/////////////////////////////////////////////////////////////////////////////////////////////
+// PLC-01
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+	// BLOQUE 1: SENSORES Y SETPOINTS 
+	
+		CALL SENSORES
+		
+		CALL SETPOINTS
+		
+		
+	// BLOQUE 2: TIMERS 
+	
+		IF RES_BIT_37 == ON AND RES_BIT_242 = OFF THEN CALL TIMERS ALSO RES_BIT_242 = ON
+		IF RES_BIT_37 == 0FF THEN RES_BIT_242 = OFF
+
+		
+	// BLOQUE 3: TEST DE SISTEMA
+		IF SS_TEST == ON THEN CALL TEST_SISTEMA ALSO JUMP FINAL 
+		
+		
+	// BLOQUE 4: PARO POR ALARMA O SERVICIO
+	
+		// ALARMA GENERAL
+			IF AL_BM == ON OR AL_EQ == ON THEN AL_SYS = ON ELSE AL_SYS = OFF	
+	
+		// RESET ALARMA CRITICA
+			IF RESET_ALM == ON THEN ALM_EQ1 = OFF ALSO ALM_EQ2 = OFF ALSO ALM_VL1 = OFF ALSO ALM_VL2 = OFF 
+			IF RESET_ALM == ON THEN ALM_BM1 = OFF ALSO ALM_BM2 = OFF ALSO ALM_BM3 = OFF ALSO RESET_ALM = OFF
+		
+		// ALARMA CRITICA
+			IF ALM_EQ1 == ON AND ALM_EQ2 == ON THEN ALM_PARO_EQ = ON ELSE ALM_PARO_EQ = OFF
+			IF ALM_VL1 == ON AND ALM_VL2 == ON THEN ALM_PARO_VL = ON ELSE ALM_PARO_VL = OFF
+			IF ALM_BM1 == ON AND ALM_BM2 == ON AND ALM_BM3 == ON THEN ALM_PARO_BM = ON ELSE ALM_PARO_BM = OFF
+		
+			IF ALM_PARO_EQ == ON OR ALM_PARO_VL == ON OR ALM_PARO_BM == ON THEN CALL PARO_ALARMA ALSO JUMP FINAL
+					
+
+	// BLOQUE 5: CONTROLES DE DEMANDA DEL SISTEMA
+	
+		// PERMISIVO PARA ACUMULADOR DE GENERADORES DE DEMANDA [ RES_BIT_241 ]
+		//	IF RES_BIT_37 != RES_BIT_240 THEN RES_BIT_241 = ON ALSO RES_BIT_240 = RES_BIT_37 ELSE RES_BIT_241 = OFF
+			
+		
+	// BLOQUE 6: ARRANQUE DE SISTEMA
+	
+		// SELECTOR DE MODO DE OPERACION
+			IF MODO == ON THEN SS_SYS = ACT_HOR ELSE SS_SYS = ACT_MAN
+			
+	
+		// PROCESO DE ARRANQUE Y PARO DE SISTEMA
+			IF SS_SYS == OFF THEN JUMP PARO 
+			
+		
+			// ARRANQUE
+		
+				// ACTIVACIÓN: CONTROL DE BOMBEO
+					IF T_SYS_ON > DL_BM_ON THEN SS_BM = ON
+			
+				// ACTIVACION: CONTROL DE EQUIPOS
+					IF T_SYS_ON > DL_EQ_ON AND ST_BM == ON THEN SS_EQ = ON 
+					
+				// ESTADO GENERAL DE SISTEMA
+					IF ST_BM == ON AND ST_EQ == ON THEN ST_SYS = ON ELSE ST_SYS = OFF
+			
+				JUMP MODULOS
+				
+		
+			// PARO
+			[PARO]
+		
+				// PARO: CONTROL DE EQUIPOS  
+					IF T_SYS_OFF > DL_EQ_OFF THEN SS_EQ = OFF 
+			
+				// PARO: CONTROL DE BOMBEO 
+					IF T_SYS_OFF > DL_BM_OFF AND ST_EQ == OFF THEN SS_BM = OFF
+					
+				// ESTADO GENERAL DE SISTEMA
+					IF ST_BM == OFF AND ST_EQ == OFF THEN ST_SYS = OFF ELSE ST_SYS = ON
+					
+	
+	// BLOQUE 7: MODULOS DE CONTROL
+	[MODULOS]
+		
+		// MODULO: CONTROL DE VENTILACION DE SUMINISTRO 
+			CALL CONTROL_BOMBEO 
+		
+		// MODULO: CONTROL DE TEMPERATURA 
+			CALL CONTROL_EQUIPOS 
+			
+		// MODULO: CONTROL DE DEMANDA 
+			CALL CONTROL_DEMANDA
+		
+		// MODULO: CONTROL DE ROTACION
+			CALL CONTROL_ROTACION
+			
+		// MODULO: VARIABLES DE BLOQUEO
+			CALL VARIABLES_BLOQUEO
+
+	[FINAL]
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// SUBRUTINAS PLC-01
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+
+//...........................................................................................
+	// AJUSTE DE LECTURA DE SENSORES
+	SUB_BEGIN [SENSORES]
+	
+		// TEMPERATURA DE SUMINISTRO DE AGUA
+			SWT = IN_SWT
+		
+		// TEMPERATURA RETORNO DE AGUA
+			RWT = IN_RWT
+		
+		// TEMPERATURA DE PRESION DIFERENCIAL DE CICUITO DE AGUA 
+			DP = IN_DP * 5
+			
+		// INVERSION DE SALIDAS
+			OUT_VL1 = SS_VL1  
+			OUT_VL2 = SS_VL2
+			
+		// ESTADO DE EQUIPOS 
+		//	ST_EQ1 = IN_EQ1 
+		//	ST_EQ2 = IN_EQ2
+			IF T_E1_ON > 10 THEN ST_EQ1 = ON
+			IF T_E1_OFF > 20 THEN ST_EQ1 = OFF
+			
+			IF T_E2_ON > 10 THEN ST_EQ2 = ON 
+			IF T_E2_OFF > 20 THEN ST_EQ2 = OFF
+		
+		// CONTADOR DE TIEMPO 
+			IF COUNT_SEC > 59 THEN COUNT_MIN = COUNT_MIN + 1 ALSO COUNT_SEC = 0 
+			IF COUNT_MIN > 59 THEN COUNT_HR = COUNT_HR + 1 ALSO COUNT_MIN = 0 
+			IF COUNT_HR > 23 THEN COUNT_DAY = COUNT_DAY + 1 ALSO COUNT_HR = 0 
+	
+	SUB_END
+	
+//...........................................................................................
+	// TIMERS DEL SISTEMA
+	SUB_BEGIN [TIMERS]
+		
+		// TIMER: CONTROL DE ARRANQUE DE SISTEMA
+			IF SS_SYS == ON THEN T_SYS_ON = T_SYS_ON + 1 ELSE T_SYS_ON = 0
+			IF T_SYS_ON > LM_TM THEN T_SYS_ON = LM_TM
+			IF SS_SYS == OFF THEN T_SYS_OFF = T_SYS_OFF + 1 ELSE T_SYS_OFF = 0
+			IF T_SYS_OFF > LM_TM THEN T_SYS_OFF = LM_TM
+		
+		// TIMER: CONTROL BOMBEO
+			IF SS_BM == ON THEN T_BM_ON = T_BM_ON + 1 ELSE T_BM_ON = 0
+			IF T_BM_ON > LM_TM THEN T_BM_ON = LM_TM
+			IF SS_BM == OFF THEN T_BM_OFF = T_BM_OFF + 1 ELSE T_BM_OFF = 0
+			IF T_BM_OFF > LM_TM THEN T_BM_OFF = LM_TM
+		
+		// TIMER: CONTROL EQUIPOS
+			IF SS_EQ == ON THEN T_EQ_ON = T_EQ_ON + 1 ELSE T_EQ_ON = 0
+			IF T_EQ_ON > LM_TM THEN T_EQ_ON = LM_TM
+			IF SS_EQ == OFF THEN T_EQ_OFF = T_EQ_OFF + 1 ELSE T_EQ_OFF = 0
+			IF T_EQ_OFF > LM_TM THEN T_EQ_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO EQUIPO 1
+			IF SS_EQ1 == ON THEN T_E1_ON = T_E1_ON + 1 ELSE T_E1_ON = 0
+			IF T_E1_ON > LM_TM THEN T_E1_ON = LM_TM
+			IF SS_EQ1 == OFF THEN T_E1_OFF = T_E1_OFF + 1 ELSE T_E1_OFF = 0
+			IF T_E1_OFF > LM_TM THEN T_E1_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO EQUIPO 2
+			IF SS_EQ2 == ON THEN T_E2_ON = T_E2_ON + 1 ELSE T_E2_ON = 0
+			IF T_E2_ON > LM_TM THEN T_E2_ON = LM_TM
+			IF SS_EQ2 == OFF THEN T_E2_OFF = T_E2_OFF + 1 ELSE T_E2_OFF = 0
+			IF T_E2_OFF > LM_TM THEN T_E2_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO VALVULA 1
+			IF SS_VL1 == ON THEN T_V1_ON = T_V1_ON + 1 ELSE T_V1_ON = 0
+			IF T_V1_ON > LM_TM THEN T_V1_ON = LM_TM
+			IF ST_VL1 == OFF THEN T_V1_OFF = T_V1_OFF + 1 ELSE T_V1_OFF = 0
+			IF T_V1_OFF > LM_TM THEN T_V1_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO VALVULA 2
+			IF SS_VL2 == ON THEN T_V2_ON = T_V2_ON + 1 ELSE T_V2_ON = 0
+			IF T_V2_ON > LM_TM THEN T_V2_ON = LM_TM
+			IF ST_VL2 == OFF THEN T_V2_OFF = T_V2_OFF + 1 ELSE T_V2_OFF = 0
+			IF T_V2_OFF > LM_TM THEN T_V2_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO BOMBA 1
+			IF SS_BM1 == ON THEN T_B1_ON = T_B1_ON + 1 ELSE T_B1_ON = 0
+			IF T_B1_ON > LM_TM THEN T_B1_ON = LM_TM
+			IF ST_BM1 == OFF THEN T_B1_OFF = T_B1_OFF + 1 ELSE T_B1_OFF = 0
+			IF T_B1_OFF > LM_TM THEN T_B1_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO BOMBA 2
+			IF SS_BM2 == ON THEN T_B2_ON = T_B2_ON + 1 ELSE T_B2_ON = 0
+			IF T_B2_ON > LM_TM THEN T_B2_ON = LM_TM
+			IF ST_BM2 == OFF THEN T_B2_OFF = T_B2_OFF + 1 ELSE T_B2_OFF = 0
+			IF T_B2_OFF > LM_TM THEN T_B2_OFF = LM_TM
+		
+		// TIMER: ARRANQUE Y ESTADO BOMBA 3
+			IF SS_BM3 == ON THEN T_B3_ON = T_B3_ON + 1 ELSE T_B3_ON = 0
+			IF T_B3_ON > LM_TM THEN T_B3_ON = LM_TM
+			IF ST_BM3 == OFF THEN T_B3_OFF = T_B3_OFF + 1 ELSE T_B3_OFF = 0
+			IF T_B3_OFF > LM_TM THEN T_B3_OFF = LM_TM
+		
+		// TIMER: ARRANQUE EQUIPO ESCLAVO
+			IF EQ_SLV == ON THEN T_ES_ON = T_ES_ON + 1 ELSE T_ES_ON = 0
+			IF T_ES_ON > LM_TM THEN T_ES_ON = LM_TM
+			IF EQ_SLV == OFF THEN T_ES_OFF = T_ES_OFF + 1 ELSE T_ES_OFF = 0
+			IF T_ES_OFF > LM_TM THEN T_ES_OFF = LM_TM
+		
+		// TIMER: TEST
+			IF TEST == ON THEN T_TEST_ON = T_TEST_ON + 1 ELSE T_TEST_ON = 0
+		
+		// CONTADOR PARA CONTROL DE ROTACION 
+			COUNT_SEC = COUNT_SEC + 1
+		
+		// CONTADORES DE TIEMPO DE OPERACION BOMBAS 
+			IF ST_BM1 == ON THEN TO_BM1 = TO_BM1 + 1
+			IF ST_BM2 == ON THEN TO_BM2 = TO_BM2 + 1
+			IF ST_BM3 == ON THEN TO_BM3 = TO_BM3 + 1
+		
+		// CONTADORES DE TIEMPO DE OPERACION EQUIPOS 
+			IF ST_EQ1 == ON THEN TO_EQ1 = TO_EQ1 + 1
+			IF ST_EQ2 == ON THEN TO_EQ2 = TO_EQ2 + 1
+	
+	SUB_END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// PLC-02
+/////////////////////////////////////////////////////////////////////////////////////////////
+PLC_2_START 
+
+
+
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// SUBRUTINAS PLC-02
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+
+//...........................................................................................
+	// MODULO DE CONTROL DE BOMBEO 
+	SUB_BEGIN [CONTROL_BOMBEO]
+	
+		IF SS_BM == OFF THEN JUMP CNTR_BOMBEO_PARO 
+
+		// CONTROL DE ARRANQUE, ESTADOS Y ALARMA DE BOMBAS
+			// BOMBA 1
+				IF BM1 == ON AND ALM_BM1 == OFF THEN SS_BM1 = ON ELSE SS_BM1 = OFF
+				IF T_B1_ON > 20 AND T_B1_OFF > 20 THEN ALM_BM1 = ON
+				IF ALM_BM1 == ON THEN SS_BM1 = OFF 
+		
+			// BOMBA 2
+				IF BM2 == ON AND ALM_BM2 == OFF THEN SS_BM2 = ON ELSE SS_BM2 = OFF
+				IF T_B2_ON > 20 AND T_B2_OFF > 20 THEN ALM_BM2 = ON
+				IF ALM_BM2 == ON THEN SS_BM2 = OFF
+		
+			// BOMBA 3
+				IF BM3 == ON AND ALM_BM3 == OFF THEN SS_BM3 = ON ELSE SS_BM3 = OFF
+				IF T_B3_ON > 20 AND T_B3_OFF > 20 THEN ALM_BM3 = ON
+				IF ALM_BM3 == ON THEN SS_BM3 = OFF
+			
+			JUMP CNTR_BOMBEO_SALIDA
+			
+			[CNTR_BOMBEO_PARO]
+			
+			// BOMBA 1
+				SS_BM1 = OFF
+				
+			// BOMBA 2 
+				SS_BM2 = OFF
+				
+			// BOMBA 3
+				SS_BM3 = OFF 
+			
+			[CNTR_BOMBEO_SALIDA]
+			// ESTADOS GLOBALES 
+				ST_BMS = ADD ST_BM1 ST_BM2 ST_BM3 
+				IF ST_BMS > 0 THEN ST_BM = ON ELSE ST_BM = OFF 
+				
+			// ALARMAS DE MODULO 
+				IF ALM_BM1 == ON OR ALM_BM2 == ON OR ALM_BM3 == ON THEN AL_BM = ON ELSE AL_BM = OFF 
+				
+			// TIEMPO DE OPERACION
+				IF TO_BM1 > 3599 THEN TO_BM1_HR = TO_BM1_HR + 1 ALSO TO_BM1 = 0
+				IF TO_BM2 > 3599 THEN TO_BM2_HR = TO_BM2_HR + 1 ALSO TO_BM2 = 0
+				IF TO_BM3 > 3599 THEN TO_BM3_HR = TO_BM3_HR + 1 ALSO TO_BM3 = 0
+
+	SUB_END
+
+
+//...........................................................................................
+	// MODULO DE CONTROL DE EQUIPOS 
+	SUB_BEGIN [CONTROL_EQUIPOS]
+
+		IF SS_EQ == OFF THEN JUMP CNTR_EQUIPOS_PARO
+		
+		// CONTROL DE ARRANQUE, ESTADOS Y ALARMA DE EQUIPOS 			
+			// EQUIPO 1
+				IF EQ1 == ON THEN SS_VL1 = ON
+				IF T_V1_ON > 50 AND T_V1_OFF > 40 THEN ALM_VL1 = ON
+				IF EQ1 == ON AND T_V1_ON > 60 AND ST_VL1 == ON AND ALM_VL1 == OFF THEN SS_EQ1 = ON
+				//IF T_E1_ON > 300 AND T_E1_OFF > 60 THEN ALM_EQ1 = ON 
+				IF ALM_VL1 == ON OR ALM_EQ1 = ON THEN SS_EQ1 = OFF ALSO SS_VL1 = OFF
+				
+				IF EQ1 == OFF THEN SS_EQ1 = OFF
+				IF EQ1 == OFF AND ST_EQ1 == OFF THEN SS_VL1 = OFF 
+				
+			// EQUIPO 2
+				IF EQ2 == ON THEN SS_VL2 = ON
+				IF T_V2_ON > 50 AND T_V2_OFF > 40 THEN ALM_VL2 = ON
+				IF EQ2 == ON AND T_V2_ON > 60 AND ST_VL2 == ON AND ALM_VL2 == OFF THEN SS_EQ2 = ON
+				//IF T_E2_ON > 300 AND T_E2_OFF > 60 THEN ALM_EQ2 = ON 
+				IF ALM_VL2 == ON OR ALM_EQ2 = ON THEN SS_EQ2 = OFF ALSO SS_VL2 = OFF
+				
+				IF EQ2 == OFF THEN SS_EQ2 = OFF
+				IF EQ2 == OFF AND ST_EQ2 == OFF THEN SS_VL2 = OFF 
+				
+			JUMP CNTR_EQUIPOS_SALIDA
+			
+			[CNTR_EQUIPOS_PARO]
+			
+			// EQUIPO 1 
+				SS_EQ1 = OFF
+				SS_VL1 = ON 
+				
+			// EQUIPO 2
+				SS_EQ2 = OFF
+				SS_VL2 = ON 
+			
+			[CNTR_EQUIPOS_SALIDA]
+			// ESTADOS GLOBALES
+				ST_EQS = ADD ST_EQ1 ST_EQ2 
+				IF ST_EQS > 0 THEN ST_EQ = ON ELSE ST_EQ = OFF 
+				
+			// ALARMAS DE MODULO 
+				IF ALM_EQ1 == ON OR ALM_EQ2 == ON OR ALM_VL1 == ON OR ALM_VL2 == ON THEN AL_EQ = ON ELSE AL_EQ = OFF 
+				
+			// TIEMPO DE OPERACION 
+				IF TO_EQ1 > 3599 THEN TO_EQ1_HR = TO_EQ1_HR + 1 ALSO TO_EQ1 = 0
+				IF TO_EQ2 > 3599 THEN TO_EQ2_HR = TO_EQ2_HR + 1 ALSO TO_EQ2 = 0
+
+	SUB_END
+	
+//...........................................................................................
+	// MODULO DE CONTROL DE DEMANDA 
+	SUB_BEGIN [CONTROL_DEMANDA]
+
+		IF BM_MIN > 1 THEN JUMP BOMBAS_2
+		
+		// ARRANQUE DE BOMBA MAESTRO
+			IF SS_BM == ON THEN BM_MST = ON
+			IF T_BM_OFF > 10 THEN BM_MST = OFF
+		
+		// ARRANQUE Y PARO DE BOMBA RESPALDO
+			IF EQ_SLV == ON AND T_BM_ON > 30 THEN BM_SLV1 = ON
+			IF T_ES_OFF > 300 OR T_BM_OFF > 10 THEN BM_SLV1 = OFF  
+			
+		// PARO DE BOMBA 
+			BM_SLV2 = OFF
+		
+		JUMP DEM_EQUIPOS
+		
+		[BOMBAS_2]
+		
+		// ARRANQUE DE BOMB MAESTRO
+			IF SS_BM == ON THEN  BM_MST = ON
+			IF T_BM_OFF > 10 THEN BM_MST = OFF 
+		
+		// ARRANQUE DE BOMBA ESCLAVO 1
+			IF T_BM_ON > 30 THEN BM_SLV1 = ON
+			IF T_BM_OFF > 10 THEN BM_SLV1 = OFF 
+		
+		// ARRANQUE DE BOMBA ESCLAVO 2
+			IF EQ_SLV == ON AND T_BM_ON > 30 THEN BM_SLV2 = ON
+			IF T_ES_OFF > 10 OR T_BM_OFF > 10 THEN BM_SLV2 = OFF 
+		
+		[DEM_EQUIPOS]
+		
+		IF EQ_MAX > 1 THEN JUMP EQUIPOS_2
+		
+		// ARRANQUE DE EQUIPO MAESTRO
+			IF SS_EQ == ON THEN EQ_MST = ON 
+			IF T_EQ_OFF > 10 THEN EQ_MST = OFF 
+			
+		// PARO DE EQUIPO RESPALDO
+			EQ_SLV = OFF 
+			
+		JUMP CNTR_DEMANDA_SALIDA
+		
+		[EQUIPOS_2]
+		
+		// ARRANQUE DE EQUIPO MAESTRO
+			IF SS_EQ == ON THEN EQ_MST = ON 
+			IF T_EQ_OFF > 10 THEN EQ_MST = OFF 
+			
+		// ARRANQUE DE EQUIPO RESPALDO
+			IF SWT < SP_SWT + 7 AND T_EQ_ON > 900 THEN EQ_SLV = ON 
+			IF SWT > SP_SWT AND T_E1_ON > 900 AND T_E2_ON > 900 THEN EQ_SLV = OFF 
+			IF T_EQ_OFF > 10 THEN EQ_SLV = OFF 
+		
+		[CNTR_DEMANDA_SALIDA]
+
+	SUB_END
+	
+	//...........................................................................................
+	// MODULO DE CONTROL DE ROTACION 
+	SUB_BEGIN [CONTROL_ROTACION]
+	
+		// ROTACION POR DIAS DE OPERACIÓN 
+			IF COUNT_DAY > ROT_D - 1 THEN ROT_BM = ROT_BM + 1 ALSO ROT_EQ = ROT_EQ + 1	ALSO COUNT_DAY = 0 ALSO COUNT_HR = 0 ALSO COUNT_MIN = 0 ALSO COUNT_SEC = 0
+	
+		// ROTACION FORZADA POR ALARMA Y SERVICIO  
+		
+			// BOMBAS
+				IF SER_BM1 == ON AND SER_BM2 == ON AND SER_BM3 == ON THEN SER_BM3 = OFF 
+			
+				IF BL_BM1 == OFF AND BL_BM2 = OFF AND BL_BM3 = ON THEN ROT_BM = 1
+				IF BL_BM1 == ON AND BL_BM2 = OFF AND BL_BM3 = OFF THEN ROT_BM = 2
+				IF BL_BM1 == OFF AND BL_BM2 = ON AND BL_BM3 = OFF THEN ROT_BM = 3
+				
+				IF BL_BM1 == OFF AND BL_BM2 = ON AND BL_BM3 = ON THEN ROT_BM = 1 ALSO BM_MIN = 1
+				IF BL_BM1 == ON AND BL_BM2 = OFF AND BL_BM3 = ON THEN ROT_BM = 2 ALSO BM_MIN = 1
+				IF BL_BM1 == ON AND BL_BM2 = ON AND BL_BM3 = OFF THEN ROT_BM = 3 ALSO BM_MIN = 1
+			
+			// EQUIPOS 
+				IF SER_EQ1 == ON AND SER_EQ2 == ON THEN SER_EQ2 = OFF
+			
+				IF BL_EQ1 == OFF AND BL_EQ2 == ON THEN ROT_EQ = 1 ALSO EQ_MAX = 1
+				IF BL_EQ1 == ON AND BL_EQ2 == OFF THEN ROT_EQ = 2 ALSO EQ_MAX = 1
+
+		// ASIGNACION DE ROLES BOMBAS
+			IF ROT_BM = 1 THEN BM1 = BM_MST ALSO BM2 = BM_SLV1 ALSO BM3 = BM_SLV2
+			IF ROT_BM = 2 THEN BM2 = BM_MST ALSO BM3 = BM_SLV1 ALSO BM1 = BM_SLV2
+			IF ROT_BM = 3 THEN BM3 = BM_MST ALSO BM1 = BM_SLV1 ALSO BM2 = BM_SLV2 
+		
+		// ASIGNACION DE ROLES EQUIPOS
+			IF ROT_EQ = 1 THEN EQ1 = EQ_MST ALSO EQ2 = EQ_SLV
+			IF ROT_EQ = 2 THEN EQ2 = EQ_MST ALSO EQ1 = EQ_SLV
+				
+
+	SUB_END 
+	
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// PLC-03
+/////////////////////////////////////////////////////////////////////////////////////////////
+PLC_3_START 
+
+
+
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+// SUBRUTINAS PLC-03
+/////////////////////////////////////////////////////////////////////////////////////////////
+//
+
+//...........................................................................................
+	// PARO POR ALARMA
+	SUB_BEGIN [PARO_ALARMA]
+	
+		// DESACTIVACIÓN DE CONTROL DE VENTILADORES
+			SS_EQ1 = OFF 
+			SS_EQ2 = OFF 
+			SS_VL1 = ON 
+			SS_VL2 = ON 
+			
+			ACT_MAN = OFF 
+		
+			SS_SYS = OFF 
+			ST_SYS = OFF 
+	
+			SS_BM = OFF 
+			ST_BM = OFF 
+	
+			SS_EQ = OFF 
+			ST_EQ = OFF
+	
+	SUB_END 
+	
+	
+				
+	//...........................................................................................
+	// VARIABLES DE BLOQUEO 
+	SUB_BEGIN [VARIABLES_BLOQUEO]
+	
+		// BLOQUEO DE SISTEMAS
+			IF ALM_BM1 == ON OR SER_BM1 == ON THEN BL_BM1 = ON ELSE BL_BM1 = OFF 
+			IF ALM_BM2 == ON OR SER_BM2 == ON THEN BL_BM2 = ON ELSE BL_BM2 = OFF 
+			IF ALM_BM3 == ON OR SER_BM3 == ON THEN BL_BM3 = ON ELSE BL_BM3 = OFF 
+			
+			IF ALM_EQ1 == ON OR ALM_VL1 == ON OR SER_EQ1 == ON THEN BL_EQ1 = ON ELSE BL_EQ1 = OFF 
+			IF ALM_EQ2 == ON OR ALM_VL2 == ON OR SER_EQ2 == ON THEN BL_EQ2 = ON ELSE BL_EQ2 = OFF 
+			
+			IF BL_BM1 == ON AND BL_BM2 == ON AND BL_BM3 == ON THEN EQ1 = OFF  ALSO EQ2 = OFF  
+	
+	SUB_END 
+	
+	//...........................................................................................
+	// TEST DE SISTEMA
+	SUB_BEGIN [TEST_SISTEMA]
+
+		// TEST ACTIVO
+			
+			
+			
+			JUMP TEST_SALIDA
+		
+		[TEST_INICIO]
+		// RESET VARIABLES
+			
+			
+			JUMP TEST_SALIDA
+		
+		[TEST_PARO]
+		// TEST PARO
+			
+		
+		[TEST_SALIDA]
+
+	SUB_END 
+	
+	//...........................................................................................
+	// AJUSTE DE PARAMETROS DE SETPOINTS
+	SUB_BEGIN [SETPOINTS]
+	
+		// SETPOINT TEMPERATURA DE SUMINISTRO
+			IF SP_SWT > SP_SWT_MAX THEN SP_SWT = SP_SWT_MAX 
+			IF SP_SWT < SP_SWT_MIN THEN SP_SWT = SP_SWT_MIN
+			
+		// SETPOINT DIAS DE ROTACION
+			IF ROT_D > ROT_D_MAX THEN ROT_D = ROT_D_MAX 
+			IF ROT_D < ROT_D_MIN THEN ROT_D = ROT_D_MIN 
+			
+		// SETPOINT BOMBAS MINIMOS EN OPERACIÓN
+			IF BM_MIN > 2 THEN BM_MIN = 2
+			IF BM_MIN < 1 THEN BM_MIN = 1
+			
+		// SETPOINT EQUIPOS MÁXIMOS EN OPERACION
+			IF EQ_MAX > 2 THEN EQ_MAX = 2
+			IF EQ_MAX < 1 THEN EQ_MAX = 1 
+			
+		// ROLES DE BOMBAS
+			IF ROT_BM > 3 THEN ROT_BM = 1
+			IF ROT_BM < 1 THEN ROT_BM = 1
+			
+		// ROLES DE EQUIPOS
+			IF ROT_EQ > 2 THEN ROT_EQ = 1
+			IF ROT_EQ < 1 THEN ROT_EQ = 1 
