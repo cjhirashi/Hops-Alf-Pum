@@ -2,13 +2,13 @@
 
 ## ENTRADAS
 
-**BI_1**    `ST_SF` 	[*ACTIVO*/*INACTIVO*]	Estado de operación de Ventilador de suministro
+> `BI_1`    **ST_SF** 	*ACTIVO* / *INACTIVO*	Estado de operación de Ventilador de suministro
 
-**BI_2**	`IN_FT1`  	[SUCIOS/LIMPIOS]	Estado de prefiltros
+> **BI_2**	`IN_FT1`  	[SUCIOS/LIMPIOS]	Estado de prefiltros
 
-**BI_3**	`IN_FT2` 	[SUCIOS/LIMPIOS]	Estado de filtros de bolsa
+< **BI_3**	`IN_FT2` 	[SUCIOS/LIMPIOS]	Estado de filtros de bolsa
 
-**BI_4**	`ST_INC`  	[ALARMA/NORMAL]		Estado de alarma de detección de incendios
+< **BI_4**	`ST_INC`  	[ALARMA/NORMAL]		Estado de alarma de detección de incendios
 
 **AI_5**  	`IN_SAT`  	[°C]				Temperatura de suministro de aire
 **AI_6**  	`IN_RAT`	[°C]				Temperatura de retorno de aire
