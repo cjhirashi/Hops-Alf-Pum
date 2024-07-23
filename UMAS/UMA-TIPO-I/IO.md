@@ -1,4 +1,4 @@
-# VARIABLES DE CONTROL
+# SISTEMA DE CONTROL - UMA TI - Unidad Manejadora de Aire tipo 1
 
 ### ENTRADAS
 
