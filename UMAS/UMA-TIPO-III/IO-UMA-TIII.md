@@ -2,7 +2,7 @@
 
 Sistema de control de Unidad Manejadora de aire de volumen variable, control de extracción de volumen variable, control de válvula proporcional de agua helada, control de expansión directa
 
-Tarjeta de control **BACnet MS/TP** - `NX7-ECO-NG` - [RIKMED](www.rikmed.com "Sistemas de control DDC")
+Tarjeta de control **BACnet MS/TP** - `NX7-ECO-NG` - [RIKMED](www.rikmed.com 'Sistemas de control DDC')
 
 - **UMA-02** `DI-11002` `MAC-5`
 
