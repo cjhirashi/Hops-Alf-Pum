@@ -66,103 +66,125 @@ Tarjeta de control **BACnet MS/TP** - `NX7-ECO-Lite` - [RIKMED](www.rikmed.com)
 >
 > **AO_3**  `CN_CCV`  	    [ *%* ]					    Control de apertura de válvula de agua helada
 
-### VARIABLES: [ SENSORES Y SETPOINTS ]
+### VARIABLES: Sensores y setpoints
 
-> **RES_FLT_1**	    `RAT`           [ *°C* ]                    -reading-   TEMPERATURA DE RETORNO DE AIRE
+> **RES_FLT_1**	    `RAT`           -reading-   [ *°C* ]                    Temperatura de retorno de aire
 >
-> **RES_FLT_2**	    `SPT`			[ *°C* ]	                -reading-	TEMPERATURA DE AREA 1
+> **RES_FLT_2**	    `SPT`			-reading-   [ *°C* ]	                Temperatura de área 1
 >
-> **ADF_1**		    `SP_SPT`		[ *°C* ]	                -writing-   SETPOINT DE TEMPERATURA DE AREA
+> **ADF_1**		    `SP_SPT`		-writing-   [ *°C* ]	                Setpoint de temperatura de área
 >
-> **ADF_2**		    `SP_SPT_MAX`	[ *°C* ]	                -reading-	LIMITE MAXIMO DE SETPOINT DE TEMPERATURA DE AREA 
+> **ADF_2**		    `SP_SPT_MAX`	-reading-   [ *°C* ]	                Límite máximo de setpoint de temperatura de área 
 >
-> **ADF_3**		    `SP_SPT_MIN`	[ *°C* ]	                -reading-	LIMITE MINIMO DE SETPOINT DE TEMPERATURA DE AREA
+> **ADF_3**		    `SP_SPT_MIN`	-reading-   [ *°C* ]	                Límite mínimo de setpoint de temperatura de área
 >
-> **RES_FLT_4**	    `SAT`			[ *°C* ]	                -reading-	TEMPERATURA DE SUMINISTRO DE AIRE 
+> **RES_FLT_4**	    `SAT`		    -reading-	[ *°C* ]	                Temperatura de suministro de aire  
 >
-> **RES_FLT_5**	    `SP_SAT`		[ *°C* ]	                -reading-	SETPOINT DE TEMPERATURA DE SUMINISTRO DE AIRE 
+> **RES_FLT_5**	    `SP_SAT`	    -reading-	[ *°C* ]	                Setpoint de temperatura de suministro de aire  
 >
-> **RES_BIT_1**	    `ST_FT1`		[ *SUCIOS* / *LIMPIOS* ]    -reading-	ESTADO DE FILTROS 1 GRAFICOS
+> **RES_BIT_1**	    `ST_FT1`	    -reading-	[ *SUCIOS* / *LIMPIOS* ]    Estado de filtros 1 (gráficos) 
 >
-> **RES_BIT_2**	    `ST_FT2`		[ *SUCIOS* / *LIMPIOS* ]    -reading-	ESTADO DE FILTROS 2 GRAFICOS
+> **RES_BIT_2**	    `ST_FT2`	    -reading-	[ *SUCIOS* / *LIMPIOS* ]    Estado de filtros 2 (gráficos) 
 >
-> **RES_FLT_10**	`Y0`			                            -reading-
+> **RES_FLT_10**	`Y0`			-reading-
 >
-> **ADF_10**		`Y1`			[ *°C* ]	                -reading-	LIMITE MAXIMO DE TEMPERATURA DE SALIDA 
+> **ADF_10**		`Y1`		    -reading-	[ *°C* ]	                Límite máximo de temperatura de salida  
 >
-> **ADF_11**		`Y2`			[ *°C* ]	                -reading-	LIMITE MINIMO DE TEMPERATURA DE SALIDA 
+> **ADF_11**		`Y2`		    -reading-	[ *°C* ]	                Límite mínimo de temperatura de salida  
 >
-> **RES_FLT_11**	`X0`			                            -reading-
+> **RES_FLT_11**	`X0`			-reading-
 >
-> **ADF_12**		`X1`			[ *°C* ]	                -reading-	LIMITE MINIMO DE TEMPERATURA DE ENTRADA 
+> **ADF_12**		`X1`		    -reading-	[ *°C* ]	                Límite máximo de temperatura de entrada  
 >
-> **ADF_13**		`X2`			[ *°C* ]	                -reading-	LIMITE MAXIMO DE TEMPERATURA DE ENTRADA 
+> **ADF_13**		`X2`		    -reading-	[ *°C* ]	                Límite mínimo de temperatura de entrada  
 >
-> **RES_FLT_12**	`M`				                            -reading-
+> **RES_FLT_12**	`M`				-reading-
 >
-> **RES_FLT_13**	`BX`			                            -reading-
+> **RES_FLT_13**	`BX`			-reading-
 >
-> **RES_FLT_14**	`B`				                            -reading-
+> **RES_FLT_14**	`B`				-reading-
 >
-> **RES_FLT_15**	`YX`			                            -reading-
+> **RES_FLT_15**	`YX`		    -reading-
 		
-	//.......................................................................................
-	// VARIABLES: [ TIMERS ]
+### VARIABLES: Timers
 	
-	DEF		ADF_14		LM_TM			// [READ]	[SEG]				LIMITE DE CONTEO TIMERS 
+> **ADF_14**		`LM_TM`			-reading-	[ *SEG* ]		LIMITE DE CONTEO TIMERS 
+>
+> **RES_FLT_16**	`T_SYS_ON`		-reading-	[ *SEG* ]		TIMER ON, ACTIVACION SISTEMA 
+>
+> **RES_FLT_17**	`T_SYS_OFF`		-reading-	[ *SEG* ]		TIMER OFF, ACTIVACION SISTEMA 
+>
+> **RES_FLT_18**	`T_VSUM_ON`		-reading-	[ *SEG* ]		TIMER ON, ACTIVACION CONTROL VENTILACION SUMINISTRO 
+>
+> **RES_FLT_19**	`T_VSUM_OFF`	-reading-	[ *SEG* ]		TIMER OFF, ACTIVACION CONTROL VENTILACION SUMINISTRO 
+>
+> **RES_FLT_22**	`T_TM_ON` 		-reading-	[ *SEG* ]		TIMER ON, ACTIVACION CONTROL TEMPERATURA 
+>
+> **RES_FLT_23**	`T_TM_OFF`		-reading-	[ *SEG* ]		TIMER OFF, ACTIVACION CONTROL TEMPERATURA 
+>
+> **RES_FLT_24**	`T_FT_ON`		-reading-	[ *SEG* ]		TIMER ON, ACTIVACION CONTROL FILTROS 
+>
+> **RES_FLT_25**	`T_FT_OFF`		-reading-	[ *SEG* ]		TIMER OFF, ACTIVACION CONTROL FILTROS 
+>
+> **RES_FLT_26**	`T_SF_ON`		-reading-	[ *SEG* ]		TIMER ON, ESTADO VENTILADOR SUMINISTRO 
+>
+> **RES_FLT_27**	`T_SF_OFF`		-reading-	[ *SEG* ]		TIMER OFF, ESTADO VENTILADOR SUMINISTRO 
+>
+> **RES_FLT_30**	`T_CM_ON`		-reading-	[ *SEG* ]		TIMER ON, ESTADO DE COMPRESOR 
+>
+> **RES_FLT_31**	`T_CM_OFF`		-reading-	[ *SEG* ]		TIMER OFF, ESTADO DE COMPRESOR 
+>
+> **RES_FLT_32**	`T_TEST_ON`		-reading-	[ *SEG* ]		TIMER ON, TEST
 	
-	DEF		RES_FLT_16	T_SYS_ON		// [READ]	[SEG]				TIMER ON, ACTIVACION SISTEMA 
-	DEF		RES_FLT_17	T_SYS_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION SISTEMA 
+### VARIABLES: Principal
 		
-	DEF		RES_FLT_18	T_VSUM_ON		// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL VENTILACION SUMINISTRO 
-	DEF		RES_FLT_19	T_VSUM_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL VENTILACION SUMINISTRO 
-		
-	DEF		RES_FLT_22	T_TM_ON 		// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL TEMPERATURA 
-	DEF		RES_FLT_23	T_TM_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL TEMPERATURA 
-		
-	DEF		RES_FLT_24	T_FT_ON			// [READ]	[SEG]				TIMER ON, ACTIVACION CONTROL FILTROS 
-	DEF		RES_FLT_25	T_FT_OFF		// [READ]	[SEG]				TIMER OFF, ACTIVACION CONTROL FILTROS 
-		
-	DEF		RES_FLT_26	T_SF_ON			// [READ]	[SEG]				TIMER ON, ESTADO VENTILADOR SUMINISTRO 
-	DEF		RES_FLT_27	T_SF_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO VENTILADOR SUMINISTRO 
-		
-	DEF		RES_FLT_30	T_CM_ON			// [READ]	[SEG]				TIMER ON, ESTADO DE COMPRESOR 
-	DEF		RES_FLT_31	T_CM_OFF		// [READ]	[SEG]				TIMER OFF, ESTADO DE COMPRESOR 
-	
-	DEF		RES_FLT_32	T_TEST_ON		// [READ]	[SEG]				TIMER ON, TEST
-	
-	//.......................................................................................
-	// VARIABLES: [ PRINCIPAL ]
-		
-	DEF		RES_BIT_201	P_MANUAL		// [READ]
-	DEF		RES_BIT_3	MODO			// [WRITE]	[AUTO/MANUAL]		MODO DE ARRANQUE DE SISTEMA 
-	DEF		RES_BIT_4	ACT_HOR			// [READ]	[ACTIVO/INACTIVO]	ACTIVACION HORARIO DE SISTEMA
-	DEF		RES_BIT_5	ACT_MAN			// [WRITE]	[ACTIVO/INACTIVO]	ACTIVACION MANUAL DE SISTEMA
-	
-	DEF		RES_BIT_6	SS_SYS			// [READ]	[ACTIVAR/PARO]		ACTIVACION GENERAL DEL SISTEMA
-	DEF		RES_BIT_7	ST_SYS			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE ACTIVACION GENERAL DEL SISTEMA 
-	DEF		RES_BIT_8	AL_SYS			// [READ]	[ALARMA/NORMAL]		ALARMA GENERAL DEL SISTEMA
-	
-	DEF		RES_BIT_9	SS_VSUM			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
-	DEF		RES_BIT_10	ST_VSUM			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
-	DEF		RES_BIT_11	AL_VSUM			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
-	DEF		ADF_15		DL_VSUM_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE VENTILACION DE SUMINISTRO 
-	DEF		ADF_16		DL_VSUM_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
-	
-	DEF		RES_BIT_15	SS_TM			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE TEMPERATURA 
-	DEF		RES_BIT_16	ST_TM			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE TEMPERATURA 
-	DEF		RES_BIT_17	AL_TM			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE TEMPERATURA 
-	DEF		ADF_19		DL_TM_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE TEMPERATURA 
-	DEF		ADF_20		DL_TM_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE TEMPERATURA
-	
-	DEF		RES_BIT_18	SS_FT			// [READ]	[ACTIVAR/PARO]		ACTIVACION DE MODULO DE CONTROL DE FILTRACION 
-	DEF		RES_BIT_19	ST_FT			// [READ]	[ACTIVO/INACTIVO]	ESTADO DE MODULO DE CONTROL DE FILTRACION 
-	DEF		RES_BIT_20	AL_FT			// [READ]	[ALARMA/NORMAL]		ALARMA DE MODULO DE CONTROL DE FILTRACION 
-	DEF		ADF_21		DL_FT_ON		// [READ]	[SEG]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE FILTRACION
-	DEF		ADF_22		DL_FT_OFF		// [READ]	[SEG]				RETARDO DE PARO DE MODULO DE CONTROL DE FILTRACION 
-	
-	DEF		RES_BIT_40	ALM_PARO		// [READ]	[ALARMA/NORMAL]		ALARMA CRITICA PARA PARO DE SISTEMA 
-	DEF		RES_BIT_41	RESET_ALM		// [READ]	[RESET/NORMAL]		RESET DE ALARMA CRITICA 
+> **RES_BIT_201**	`P_MANUAL`      -reading-
+>
+> **RES_BIT_3**	    `MODO`			-writing-	[ *AUTO* / *MANUAL* ]		MODO DE ARRANQUE DE SISTEMA 
+>
+> **RES_BIT_4**	    `ACT_HOR`		-reading-	[ *ACTIVO* / *INACTIVO* ]	ACTIVACION HORARIO DE SISTEMA
+>
+> **RES_BIT_5**	    `ACT_MAN`		-writing-	[ *ACTIVO* / *INACTIVO* ]	ACTIVACION MANUAL DE SISTEMA
+>
+> **RES_BIT_6**	    `SS_SYS`		-reading-	[ *ACTIVAR* / *PARO* ]		ACTIVACION GENERAL DEL SISTEMA
+>
+> **RES_BIT_7**	    `ST_SYS`		-reading-	[ *ACTIVO* / *INACTIVO* ]	ESTADO DE ACTIVACION GENERAL DEL SISTEMA 
+>
+> **RES_BIT_8**	    `AL_SYS`		-reading-	[ *ALARMA* / *NORMAL* ]		ALARMA GENERAL DEL SISTEMA
+>
+> **RES_BIT_9**	    `SS_VSUM`		-reading-	[ *ACTIVAR* / *PARO* ]		ACTIVACION DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO
+> 
+> **RES_BIT_10**	`ST_VSUM`		-reading-	[ *ACTIVO* / *INACTIVO* ]	ESTADO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO
+> 
+> **RES_BIT_11**	`AL_VSUM`		-reading-	[ *ALARMA* / *NORMAL* ]		ALARMA DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO
+> 
+> **ADF_15**		`DL_VSUM_ON`	-reading-	[ *SEG* ]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE VENTILACION DE SUMINISTRO 
+>
+> **ADF_16**		`DL_VSUM_OFF`	-reading-	[ *SEG* ]				RETARDO DE PARO DE MODULO DE CONTROL DE VENTILACION DE SUMINISTRO 
+>
+> **RES_BIT_15**	`SS_TM`			-reading-	[ *ACTIVAR* / *PARO* ]		ACTIVACION DE MODULO DE CONTROL DE TEMPERATURA 
+>
+> **RES_BIT_16**	`ST_TM`			-reading-	[ *ACTIVO* / *INACTIVO* ]	ESTADO DE MODULO DE CONTROL DE TEMPERATURA 
+>
+> **RES_BIT_17**	`AL_TM`			-reading-	[ *ALARMA* / *NORMAL* ]		ALARMA DE MODULO DE CONTROL DE TEMPERATURA 
+>
+> **ADF_19**		`DL_TM_ON`		-reading-	[ *SEG* ]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE TEMPERATURA
+> 
+> **ADF_20**		`DL_TM_OFF`		-reading-	[ *SEG* ]				RETARDO DE PARO DE MODULO DE CONTROL DE TEMPERATURA
+>
+> **RES_BIT_18**	`SS_FT`			-reading-	[ *ACTIVAR* / *PARO* ]		ACTIVACION DE MODULO DE CONTROL DE FILTRACION 
+>
+> **RES_BIT_19**	`ST_FT`			-reading-	[ *ACTIVO* / *INACTIVO* ]	ESTADO DE MODULO DE CONTROL DE FILTRACION 
+>
+> **RES_BIT_20**	`AL_FT`			-reading-	[ *ALARMA* / *NORMAL* ]		ALARMA DE MODULO DE CONTROL DE FILTRACION 
+>
+> **ADF_21**		`DL_FT_ON`		-reading-	[ *SEG* ]				RETARDO DE ACTIVACION DE MODULO DE CONTRO DE FILTRACION
+>
+> **ADF_22**		`DL_FT_OFF`		-reading-	[ *SEG* ]				RETARDO DE PARO DE MODULO DE CONTROL DE FILTRACION 
+>
+> **RES_BIT_40**	`ALM_PARO`		-reading-	[ *ALARMA* / *NORMAL* ]		ALARMA CRITICA PARA PARO DE SISTEMA 
+>
+> **RES_BIT_41**	`RESET_ALM`		-reading-	[ *RESET* / *NORMAL* ]		RESET DE ALARMA CRITICA 
 	
 	//.......................................................................................
 	// VARIABLES: [ VENTILACION SUMINISTRO ]
