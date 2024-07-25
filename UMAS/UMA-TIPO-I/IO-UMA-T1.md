@@ -68,43 +68,43 @@ Tarjeta de control **BACnet MS/TP** - `NX7-ECO-Lite` - [RIKMED](www.rikmed.com)
 
 ### VARIABLES: [ SENSORES Y SETPOINTS ]
 
-> **RES_FLT_1**	    `RAT`           [ *°C* ]                    -read-      TEMPERATURA DE RETORNO DE AIRE
+> **RES_FLT_1**	    `RAT`           [ *°C* ]                    -reading-   TEMPERATURA DE RETORNO DE AIRE
 >
-> **RES_FLT_2**	    `SPT`			[ *°C* ]	                -read-		TEMPERATURA DE AREA 1
+> **RES_FLT_2**	    `SPT`			[ *°C* ]	                -reading-	TEMPERATURA DE AREA 1
 >
-> **ADF_1**		    `SP_SPT`		[ *°C* ]	                -write-     SETPOINT DE TEMPERATURA DE AREA
+> **ADF_1**		    `SP_SPT`		[ *°C* ]	                -writing-   SETPOINT DE TEMPERATURA DE AREA
 >
-> **ADF_2**		    `SP_SPT_MAX`	[ *°C* ]	                -read-		LIMITE MAXIMO DE SETPOINT DE TEMPERATURA DE AREA 
+> **ADF_2**		    `SP_SPT_MAX`	[ *°C* ]	                -reading-	LIMITE MAXIMO DE SETPOINT DE TEMPERATURA DE AREA 
 >
-> **ADF_3**		    `SP_SPT_MIN`	[ *°C* ]	                -read-		LIMITE MINIMO DE SETPOINT DE TEMPERATURA DE AREA
+> **ADF_3**		    `SP_SPT_MIN`	[ *°C* ]	                -reading-	LIMITE MINIMO DE SETPOINT DE TEMPERATURA DE AREA
 >
-> **RES_FLT_4**	    `SAT`			[ *°C* ]	                -read-		TEMPERATURA DE SUMINISTRO DE AIRE 
+> **RES_FLT_4**	    `SAT`			[ *°C* ]	                -reading-	TEMPERATURA DE SUMINISTRO DE AIRE 
 >
-> **RES_FLT_5**	    `SP_SAT`		[ *°C* ]	                -read-		SETPOINT DE TEMPERATURA DE SUMINISTRO DE AIRE 
+> **RES_FLT_5**	    `SP_SAT`		[ *°C* ]	                -reading-	SETPOINT DE TEMPERATURA DE SUMINISTRO DE AIRE 
 >
-> **RES_BIT_1**	    `ST_FT1`		[ *SUCIOS* / *LIMPIOS* ]    -READ-	    ESTADO DE FILTROS 1 GRAFICOS
+> **RES_BIT_1**	    `ST_FT1`		[ *SUCIOS* / *LIMPIOS* ]    -reading-	ESTADO DE FILTROS 1 GRAFICOS
 >
-> **RES_BIT_2**	    `ST_FT2`		[ *SUCIOS* / *LIMPIOS* ]    -READ-	    ESTADO DE FILTROS 2 GRAFICOS
+> **RES_BIT_2**	    `ST_FT2`		[ *SUCIOS* / *LIMPIOS* ]    -reading-	ESTADO DE FILTROS 2 GRAFICOS
 >
-> **RES_FLT_10**	`Y0`			                            -READ-
+> **RES_FLT_10**	`Y0`			                            -reading-
 >
-> **ADF_10**		`Y1`			[ *°C* ]	                -READ-		LIMITE MAXIMO DE TEMPERATURA DE SALIDA 
+> **ADF_10**		`Y1`			[ *°C* ]	                -reading-	LIMITE MAXIMO DE TEMPERATURA DE SALIDA 
 >
-> **ADF_11**		`Y2`			[ *°C* ]	                -READ-		LIMITE MINIMO DE TEMPERATURA DE SALIDA 
+> **ADF_11**		`Y2`			[ *°C* ]	                -reading-	LIMITE MINIMO DE TEMPERATURA DE SALIDA 
 >
-> **RES_FLT_11**	`X0`			                            -READ-
+> **RES_FLT_11**	`X0`			                            -reading-
 >
-> **ADF_12**		`X1`			[ *°C* ]	                -READ-		LIMITE MINIMO DE TEMPERATURA DE ENTRADA 
+> **ADF_12**		`X1`			[ *°C* ]	                -reading-	LIMITE MINIMO DE TEMPERATURA DE ENTRADA 
 >
-> **ADF_13**		`X2`			[ *°C* ]	                -READ-		LIMITE MAXIMO DE TEMPERATURA DE ENTRADA 
+> **ADF_13**		`X2`			[ *°C* ]	                -reading-	LIMITE MAXIMO DE TEMPERATURA DE ENTRADA 
 >
-> **RES_FLT_12**	`M`				                            -READ-
+> **RES_FLT_12**	`M`				                            -reading-
 >
-> **RES_FLT_13**	`BX`			                            -READ-
+> **RES_FLT_13**	`BX`			                            -reading-
 >
-> **RES_FLT_14**	`B`				                            -READ-
+> **RES_FLT_14**	`B`				                            -reading-
 >
-> **RES_FLT_15**	`YX`			                            -READ-
+> **RES_FLT_15**	`YX`			                            -reading-
 		
 	//.......................................................................................
 	// VARIABLES: [ TIMERS ]
