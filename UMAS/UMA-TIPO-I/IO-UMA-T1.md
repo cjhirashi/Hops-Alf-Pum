@@ -68,19 +68,19 @@ Tarjeta de control **BACnet MS/TP** - `NX7-ECO-Lite` - [RIKMED](www.rikmed.com)
 
 ### VARIABLES: [ SENSORES Y SETPOINTS ]
 
-> **RES_FLT_1**	    `RAT`           [ *°C* ]                    -READ-      TEMPERATURA DE RETORNO DE AIRE
+> **RES_FLT_1**	    `RAT`           [ *°C* ]                    -read-      TEMPERATURA DE RETORNO DE AIRE
 >
-> **RES_FLT_2**	    `SPT`			[ *°C* ]	                -READ-		TEMPERATURA DE AREA 1
+> **RES_FLT_2**	    `SPT`			[ *°C* ]	                -read-		TEMPERATURA DE AREA 1
 >
-> **ADF_1**		    `SP_SPT`		[ *°C* ]	                -WRITE-     SETPOINT DE TEMPERATURA DE AREA
+> **ADF_1**		    `SP_SPT`		[ *°C* ]	                -write-     SETPOINT DE TEMPERATURA DE AREA
 >
-> **ADF_2**		    `SP_SPT_MAX`	[ *°C* ]	                -READ-		LIMITE MAXIMO DE SETPOINT DE TEMPERATURA DE AREA 
+> **ADF_2**		    `SP_SPT_MAX`	[ *°C* ]	                -read-		LIMITE MAXIMO DE SETPOINT DE TEMPERATURA DE AREA 
 >
-> **ADF_3**		    `SP_SPT_MIN`	[ *°C* ]	                -READ-		LIMITE MINIMO DE SETPOINT DE TEMPERATURA DE AREA
+> **ADF_3**		    `SP_SPT_MIN`	[ *°C* ]	                -read-		LIMITE MINIMO DE SETPOINT DE TEMPERATURA DE AREA
 >
-> **RES_FLT_4**	    `SAT`			[ *°C* ]	                -READ-		TEMPERATURA DE SUMINISTRO DE AIRE 
+> **RES_FLT_4**	    `SAT`			[ *°C* ]	                -read-		TEMPERATURA DE SUMINISTRO DE AIRE 
 >
-> **RES_FLT_5**	    `SP_SAT`		[ *°C* ]	                -READ-		SETPOINT DE TEMPERATURA DE SUMINISTRO DE AIRE 
+> **RES_FLT_5**	    `SP_SAT`		[ *°C* ]	                -read-		SETPOINT DE TEMPERATURA DE SUMINISTRO DE AIRE 
 >
 > **RES_BIT_1**	    `ST_FT1`		[ *SUCIOS* / *LIMPIOS* ]    -READ-	    ESTADO DE FILTROS 1 GRAFICOS
 >
