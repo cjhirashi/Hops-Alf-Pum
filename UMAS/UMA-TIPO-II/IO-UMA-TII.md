@@ -4,17 +4,17 @@ Sistema de control de Unidad Manejadora de aire de volumen constante, control de
 
 Tarjeta de control **BACnet MS/TP** - `NX5-ECO-HVAC` - [RIKMED](www.rikmed.com)
 
-- **UMA-06** `DI-11006` `MAC-9`
+- **UMA-06** `DI-22006` `MAC-9`
 
-- **UMA-07** `DI-11007` `MAC-10`
+- **UMA-07** `DI-22007` `MAC-10`
 
-- **UMA-11** `DI-11011` `MAC-14`
+- **UMA-11** `DI-21011` `MAC-14`
 
-- **UMA-17** `DI-11017` `MAC-20`
+- **UMA-17** `DI-13017` `MAC-20`
 
-- **UMA-18** `DI-11018` `MAC-21`
+- **UMA-18** `DI-13018` `MAC-21`
 
-- **UMA-19** `DI-11019` `MAC-12`
+- **UMA-19** `DI-13019` `MAC-12`
 
 ### ENTRADAS
 

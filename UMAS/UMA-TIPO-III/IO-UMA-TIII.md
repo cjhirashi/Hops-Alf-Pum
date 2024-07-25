@@ -4,13 +4,13 @@ Sistema de control de Unidad Manejadora de aire de volumen variable, control de 
 
 Tarjeta de control **BACnet MS/TP** - `NX7-ECO-NG` - [RIKMED](www.rikmed.com 'Sistemas de control DDC')
 
-- **UMA-02** `DI-11002` `MAC-5`
+- **UMA-02** `DI-21002` `MAC-5`
 
-- **UMA-04** `DI-11004` `MAC-7`
+- **UMA-04** `DI-22004` `MAC-7`
 
-- **UMA-05** `DI-11005` `MAC-8`
+- **UMA-05** `DI-22005` `MAC-8`
 
-- **UMA-08** `DI-11008` `MAC-11`
+- **UMA-08** `DI-22008` `MAC-11`
 
 ### ENTRADAS
 

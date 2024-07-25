@@ -4,33 +4,33 @@ Sistema de control de Unidad Manejadora de aire de volumen constante, control de
 
 Tarjeta de control **BACnet MS/TP** - `NX7-ECO-Lite` - [RIKMED](www.rikmed.com)
 
-- **UMA-01** `DI-11001` `MAC-4`
+- **UMA-01** `DI-21001` `MAC-4`
 
-- **UMA-03** `DI-11003` `MAC-6`
+- **UMA-03** `DI-22003` `MAC-6`
 
-- **UMA-09** `DI-11009` `MAC-12`
+- **UMA-09** `DI-22009` `MAC-12`
 
-- **UMA-10** `DI-11010` `MAC-13`
+- **UMA-10** `DI-22010` `MAC-13`
 
-- **UMA-12** `DI-11012` `MAC-15`
+- **UMA-12** `DI-21012` `MAC-15`
 
-- **UMA-13** `DI-11013` `MAC-16`
+- **UMA-13** `DI-21013` `MAC-16`
 
-- **UMA-14** `DI-11014` `MAC-17`
+- **UMA-14** `DI-21014` `MAC-17`
 
-- **UMA-15** `DI-11015` `MAC-18`
+- **UMA-15** `DI-21015` `MAC-18`
 
-- **UMA-16** `DI-11016` `MAC-19`
+- **UMA-16** `DI-21016` `MAC-19`
 
-- **UMA-20** `DI-11020` `MAC-23`
+- **UMA-20** `DI-13020` `MAC-23`
 
-- **UMA-22** `DI-11022` `MAC-24`
+- **UMA-22** `DI-14022` `MAC-24`
 
-- **UMA-23** `DI-11023` `MAC-25`
+- **UMA-23** `DI-15023` `MAC-25`
 
-- **UMA-24** `DI-11024` `MAC-26`
+- **UMA-24** `DI-15024` `MAC-26`
 
-- **UMA-25** `DI-11025` `MAC-27`
+- **UMA-25** `DI-14025` `MAC-27`
 
 ### ENTRADAS
 
